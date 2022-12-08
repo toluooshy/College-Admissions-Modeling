@@ -3,7 +3,7 @@ Admissions Modeling:
 Modeling how likely a person will be admitted to Olin College of Engineering based on how similar they are to already admitted Olin students based on SAT Scores/ACT Scores, high school GPA, and gender (add more?take away some?)
 ---
 
-Loading in csv data on SAT Scores, ACT Scores, high school GPA, and gender (only includes men or women as options). 
+Loading in csv data on SAT Scores, ACT Scores, high school GPA, gender (only includes men or women as options), and enrollment. 
 ```{r}
 # SAT Scores
 SAT25thReading <- read.csv("25thPercentileReading.csv", header = FALSE)
@@ -17,20 +17,21 @@ ACT75thReading <- read.csv("ACT75thPercentileReading.csv", header = FALSE)
 ACT25thMath <- read.csv("ACT25thPercentileMath.csv", header = FALSE)
 ACT75thMath <- read.csv("ACT75thPercentileMath.csv", header = FALSE)
 
-# Percent of Oliners in a SAT or ACT score range
-TestsComposite <- read.csv("SATACTComposite.csv", header = FALSE)
-
 # Percent of Oliners in a GPA range
 GPA <-read.csv("GPA.csv", header = FALSE)
 
 #Gender
-TotalApplicants<-read.csv("TotalApplicants.csv", header = FALSE)
-ApplicantsMen<-read.csv("ApplicantsMen.csv", header = FALSE)
-AdmittedMen<-read.csv("AdmittedMen.csv", header = FALSE)
-ApplicantsWomen<-read.csv("ApplicantsWomen.csv", header = FALSE)
-AdmittedWomen<-read.csv("AdmittedWomen.csv", header = FALSE)
+TotalApplicants <- read.csv("TotalApplicants.csv", header = FALSE)
+ApplicantsMen <- read.csv("ApplicantsMen.csv", header = FALSE)
+AdmittedMen <- read.csv("AdmittedMen.csv", header = FALSE)
+ApplicantsWomen <- read.csv("ApplicantsWomen.csv", header = FALSE)
+AdmittedWomen <- read.csv("AdmittedWomen.csv", header = FALSE)
+
+# Enrollment
+Enrollment <- read.csv("Enrollment.csv", header = FALSE)
+
 ```
-Making data usable to analyze by organizing them, converting them to numerics if needed, and getting rid of NA's. 
+Making data usable to analyze by organizing them, converting them to numeric if needed, and cleaning out NA's. 
 ```{r}
 # converting dataframes to numerics and removing NA's
 LowerSATReading <- as.numeric(SAT25thReading[2,3:length(SAT25thReading)])
@@ -49,7 +50,7 @@ LowerACTReading <- as.numeric(ACT25thReading[2,3:length(ACT25thReading)])
 LAR <- LowerACTReading[!is.na(LowerACTReading)]
 
 HigherACTReading <- as.numeric(ACT75thReading[2,3:length(ACT75thReading)])
-HAR <- LowerACTReading[!is.na(HigherACTReading)]
+HAR <- HigherACTReading[!is.na(HigherACTReading)]
 
 LowerACTMath <- as.numeric(ACT25thMath[2,3:length(ACT25thMath)])
 LAM <- LowerACTMath[!is.na(LowerACTMath)]
@@ -75,27 +76,42 @@ AdmWomen <- AdmitWomen[!is.na(AdmitWomen)]
 PercentHighGPA <- as.numeric(GPA[2, 2:length(GPA)])
 PercentMediumGPA <- as.numeric(GPA[3, 2:length(GPA)])
 PercentLowGPA <- as.numeric(GPA[4, 2:length(GPA)])
+
+Enrolled <- as.numeric(Enrollment[2,3:length(Enrollment)])
+Enroll <- Enrolled[!is.na(Enrolled)]
 ```
+
 
 Means of Gender Data
 ```{r}
+# average number of applicants and admitted students each year
 avgTotalApp <- mean(TotalApp)
 avgAppMen <- mean(AppMen)
 avgAppWomen <- mean(AppWomen)
 avgAdmMen <- mean(AdmMen)
 avgAdmWomen <-mean(AdmWomen)
-ProbAdmMen <- avgAdmMen/avgAppMen
-ProbAdmWomen <- avgAdmWomen/avgAppWomen
 
 # probability admitted based on gender
+ProbAdmMen <- avgAdmMen/avgAppMen
+ProbAdmWomen <- avgAdmWomen/avgAppWomen
 ProbAdmGender <- c(ProbAdmMen, ProbAdmWomen)
 
-# average of total admited students 
+# average of total admitted students 
 avgAdm <- avgAdmMen + avgAdmWomen
 
 # overall probability of being admitted
-
 POverallAdm <- avgAdm/avgTotalApp
+```
+
+Enrollment Data
+```{r}
+# average number of students enrolled at Olin
+avgEnrolled <- mean(Enroll)
+avgNotEnrolled <- avgAdm - avgEnrolled
+
+# probability of being admitted and decided to go and not to go to Olin
+PAdmEnrolled <- avgEnrolled / avgAdm
+PAdmNotEnrolled <- avgNotEnrolled / avgAdm
 ```
 
 Mean Lows and Highs of SAT Scores
@@ -113,7 +129,7 @@ avgHSC <- avgHSR + avgHSM
 SATScores <- c(avgLSR, avgHSR, avgLSM, avgHSM)
 SATComp <- c(avgLSC, avgHSC)
 
-print(SATComp)
+print(SATScores)
 ```
 Using Bayes' Rule to Find Probability of Being Admitted Given Within a GPA Range
 
@@ -129,10 +145,14 @@ PMediumSATOlin <- 0.5
 # 0th percentile: 1300 to 1433
 PLowSATOlin <- 0.25
 
-PHighSAT <- 0.02
+
+# probability high schooler being within these SAT ranges from national data
+PHighSAT <- 0.03
 PMediumSAT <- 0.05
 PLowSAT <- 0.07
 
+# function to determine probability of being admitted given your SAT score
+PSATAdm <- PMediumSATOlin*PAdmEnrolled + PMediumSATOlin*PAdmNotEnrolled
 PAdmSAT <- function(YourSAT)
   if (YourSAT>avgHSC){
     PAdmSAT <- PHighSATOlin*POverallAdm/PHighSAT
@@ -143,32 +163,69 @@ PAdmSAT <- function(YourSAT)
   } else {
     PAdmSAT <-0
   }
-print(PAdmSAT(1570))
+
+
+PSATAdm*POverallAdm/PMediumSAT
 ```
 
 Mean Lows and Highs of ACT Scores
 ```{r}
+# mean highs and lows of Reading and Math ACT scores
 avgLAR <- mean(LAR)
 avgHAR <- mean(HAR)
 avgLAM <- mean(LAM)
 avgHAM <- mean(HAM)
 
 # average high and low ACT composite scores of Oliners
-avgLAC <- (avgLAR + avgLAM) / 2
-avgHAC <- (avgHAR + avgHAM) / 2
+avgOlinLAC <- (avgLAR + avgLAM) / 2
+avgOlinHAC <- (avgHAR + avgHAM) / 2
+
 
 ACTScores <- c(avgLAR, avgHAR, avgLAM, avgHAM)
-ACTComp <- c(avgLAC, avgHAC)
+ACTComp <- c(avgOlinLAC, avgOlinHAC)
+print(ACTComp)
 
+```
+
+Using Bayes' Rule to Find Probability of Being Admitted into Olin based on being in an ACT Range
+```{r}
+# probabilities Oliners are in ACT score ranges
+
+# 75th percentile: 34 or greater
+PHighACTOlin <- 0.25
+
+# 25th percentile: 32.7 to 34
+PMediumACTOlin <- 0.5
+
+# 0th percentile: 30 to 32.7
+PLowACTOlin <- 0.25
+
+# probability of a higher schooler being within these ACT score ranges
+PHighACT <- 0.01
+PMediumACT <- 0.04
+PLowACT <- 0.05
+
+PAdmACT <- function(YourACT)
+  if (YourACT>avgOlinHAC){
+    PAdmACT <- PHighACTOlin*POverallAdm/PHighACT
+  } else if(YourACT>avgOlinLAC){
+    PAdmACT <- PMediumACTOlin*POverallAdm/PMediumACT
+  } else if(YourACT>30){
+    PAdmACT <- PLowACTOlin*POverallAdm/PLowACT
+  } else {
+    PAdmACT <-0
+  }
+print(PAdmACT(34))
 ```
 
 Means of GPA Data
 ```{r}
+# average percent of Olin students that fall with in a GPA range
 avgOlinHighGPA <- mean(PercentHighGPA)
 avgOlinMediumGPA <- mean(PercentMediumGPA)
 avgOlinLowGPA <- mean(PercentLowGPA)
 
-# found from 
+# found from national data
 avgHighGPA <- 0.07
 avgMediumGPA <- 0.14
 avgLowGPA <- 0.31
@@ -176,7 +233,6 @@ avgLowGPA <- 0.31
 # probability of having high (3.74 - 4.0), medium (3.5-3.74) and low (3.25-3.49) GPAs given the student is at Olin
 avgOlinGPA <- c(avgOlinHighGPA, avgOlinMediumGPA, avgOlinLowGPA)
 
-avgOlinHighGPA
 ```
 
 Using Bayes' Rule to Find Probability of Being Admitted Given Within a GPA Range
@@ -191,9 +247,5 @@ PAdmGPA <- function(YourGPA)
   } else {
     PAdmGPA <-0
   }
-  # PAdmGPA <- YourGPARange*POverallAdm/
-#print(PAdmGPA(avgOlinHighGPA))
 print(PAdmGPA(3.9))
-
-
 ```
