@@ -1,0 +1,199 @@
+---
+Admissions Modeling:
+Modeling how likely a person will be admitted to Olin College of Engineering based on how similar they are to already admitted Olin students based on SAT Scores/ACT Scores, high school GPA, and gender (add more?take away some?)
+---
+
+Loading in csv data on SAT Scores, ACT Scores, high school GPA, and gender (only includes men or women as options). 
+```{r}
+# SAT Scores
+SAT25thReading <- read.csv("25thPercentileReading.csv", header = FALSE)
+SAT75thReading <- read.csv("75thPercentileReading.csv", header = FALSE)
+SAT25thMath <- read.csv("25thPercentileMath.csv", header = FALSE)
+SAT75thMath <- read.csv("75thPercentileMath.csv", header = FALSE)
+
+# ACT Scores
+ACT25thReading <- read.csv("ACT25thPercentileReading.csv", header = FALSE)
+ACT75thReading <- read.csv("ACT75thPercentileReading.csv", header = FALSE)
+ACT25thMath <- read.csv("ACT25thPercentileMath.csv", header = FALSE)
+ACT75thMath <- read.csv("ACT75thPercentileMath.csv", header = FALSE)
+
+# Percent of Oliners in a SAT or ACT score range
+TestsComposite <- read.csv("SATACTComposite.csv", header = FALSE)
+
+# Percent of Oliners in a GPA range
+GPA <-read.csv("GPA.csv", header = FALSE)
+
+#Gender
+TotalApplicants<-read.csv("TotalApplicants.csv", header = FALSE)
+ApplicantsMen<-read.csv("ApplicantsMen.csv", header = FALSE)
+AdmittedMen<-read.csv("AdmittedMen.csv", header = FALSE)
+ApplicantsWomen<-read.csv("ApplicantsWomen.csv", header = FALSE)
+AdmittedWomen<-read.csv("AdmittedWomen.csv", header = FALSE)
+```
+Making data usable to analyze by organizing them, converting them to numerics if needed, and getting rid of NA's. 
+```{r}
+# converting dataframes to numerics and removing NA's
+LowerSATReading <- as.numeric(SAT25thReading[2,3:length(SAT25thReading)])
+LSR<-LowerSATReading[!is.na(LowerSATReading)]
+
+HigherSATReading <-as.numeric(SAT75thReading[2,3:length(SAT75thReading)])
+HSR <- HigherSATReading[!is.na(HigherSATReading)]
+
+LowerSATMath<- as.numeric(SAT25thMath[2,3:length(SAT25thMath)])
+LSM <- LowerSATMath[!is.na(LowerSATMath)]
+
+HigherSATMath <-as.numeric(SAT75thMath[2,3:length(SAT75thMath)])
+HSM <- HigherSATMath[!is.na(HigherSATMath)]
+
+LowerACTReading <- as.numeric(ACT25thReading[2,3:length(ACT25thReading)])
+LAR <- LowerACTReading[!is.na(LowerACTReading)]
+
+HigherACTReading <- as.numeric(ACT75thReading[2,3:length(ACT75thReading)])
+HAR <- LowerACTReading[!is.na(HigherACTReading)]
+
+LowerACTMath <- as.numeric(ACT25thMath[2,3:length(ACT25thMath)])
+LAM <- LowerACTMath[!is.na(LowerACTMath)]
+
+HigherACTMath <- as.numeric(ACT75thMath[2,3:length(ACT75thMath)])
+HAM <- HigherACTMath[!is.na(HigherACTMath)]
+
+TotalApplicant <- as.numeric(TotalApplicants[2,3:length(TotalApplicants)])
+TotalApp <- TotalApplicant[!is.na(TotalApplicant)]
+
+ApplicantMen <- as.numeric(ApplicantsMen[2,3:length(ApplicantsMen)])
+AppMen <- ApplicantMen[!is.na(ApplicantMen)]
+
+ApplicantWomen <- as.numeric(ApplicantsWomen[2,3:length(ApplicantsWomen)])
+AppWomen <- ApplicantWomen[!is.na(ApplicantWomen)]
+
+AdmitMen <- as.numeric(AdmittedMen[2,3:length(AdmittedMen)])
+AdmMen <- AdmitMen[!is.na(ApplicantMen)]
+
+AdmitWomen <- as.numeric(AdmittedWomen[2,3:length(AdmittedWomen)])
+AdmWomen <- AdmitWomen[!is.na(AdmitWomen)]
+
+PercentHighGPA <- as.numeric(GPA[2, 2:length(GPA)])
+PercentMediumGPA <- as.numeric(GPA[3, 2:length(GPA)])
+PercentLowGPA <- as.numeric(GPA[4, 2:length(GPA)])
+```
+
+Means of Gender Data
+```{r}
+avgTotalApp <- mean(TotalApp)
+avgAppMen <- mean(AppMen)
+avgAppWomen <- mean(AppWomen)
+avgAdmMen <- mean(AdmMen)
+avgAdmWomen <-mean(AdmWomen)
+ProbAdmMen <- avgAdmMen/avgAppMen
+ProbAdmWomen <- avgAdmWomen/avgAppWomen
+
+# probability admitted based on gender
+ProbAdmGender <- c(ProbAdmMen, ProbAdmWomen)
+
+# average of total admited students 
+avgAdm <- avgAdmMen + avgAdmWomen
+
+# overall probability of being admitted
+
+POverallAdm <- avgAdm/avgTotalApp
+```
+
+Mean Lows and Highs of SAT Scores
+```{r}
+# finding the mean high and low scores for the reading and math SAT
+avgLSR <- mean(LSR)
+avgHSR <- mean(HSR)
+avgLSM <- mean(LSM)
+avgHSM <- mean(HSM)
+
+# average low and high SAT composite scores of Oliners
+avgLSC <- avgLSR + avgLSM
+avgHSC <- avgHSR + avgHSM
+
+SATScores <- c(avgLSR, avgHSR, avgLSM, avgHSM)
+SATComp <- c(avgLSC, avgHSC)
+
+print(SATComp)
+```
+Using Bayes' Rule to Find Probability of Being Admitted Given Within a GPA Range
+
+```{r}
+# probabilities Oliners are SAT score ranges
+
+# 75th percentile: 1563 or greater
+PHighSATOlin <- 0.25
+
+# 25th percentile: 1433 to 1563
+PMediumSATOlin <- 0.5
+
+# 0th percentile: 1300 to 1433
+PLowSATOlin <- 0.25
+
+PHighSAT <- 0.02
+PMediumSAT <- 0.05
+PLowSAT <- 0.07
+
+PAdmSAT <- function(YourSAT)
+  if (YourSAT>avgHSC){
+    PAdmSAT <- PHighSATOlin*POverallAdm/PHighSAT
+  } else if(YourSAT>avgLSC){
+    PAdmSAT <- PMediumSATOlin*POverallAdm/PMediumSAT
+  } else if(YourSAT>1300){
+    PAdmSAT <- PLowSATOlin*POverallAdm/PLowSAT
+  } else {
+    PAdmSAT <-0
+  }
+print(PAdmSAT(1570))
+```
+
+Mean Lows and Highs of ACT Scores
+```{r}
+avgLAR <- mean(LAR)
+avgHAR <- mean(HAR)
+avgLAM <- mean(LAM)
+avgHAM <- mean(HAM)
+
+# average high and low ACT composite scores of Oliners
+avgLAC <- (avgLAR + avgLAM) / 2
+avgHAC <- (avgHAR + avgHAM) / 2
+
+ACTScores <- c(avgLAR, avgHAR, avgLAM, avgHAM)
+ACTComp <- c(avgLAC, avgHAC)
+
+```
+
+Means of GPA Data
+```{r}
+avgOlinHighGPA <- mean(PercentHighGPA)
+avgOlinMediumGPA <- mean(PercentMediumGPA)
+avgOlinLowGPA <- mean(PercentLowGPA)
+
+# found from 
+avgHighGPA <- 0.07
+avgMediumGPA <- 0.14
+avgLowGPA <- 0.31
+
+# probability of having high (3.74 - 4.0), medium (3.5-3.74) and low (3.25-3.49) GPAs given the student is at Olin
+avgOlinGPA <- c(avgOlinHighGPA, avgOlinMediumGPA, avgOlinLowGPA)
+
+avgOlinHighGPA
+```
+
+Using Bayes' Rule to Find Probability of Being Admitted Given Within a GPA Range
+```{r}
+PAdmGPA <- function(YourGPA)
+  if (YourGPA>3.74){
+    PAdmGPA <- avgOlinHighGPA*POverallAdm/avgHighGPA
+  } else if(YourGPA>3.49){
+    PAdmGPA <- avgOlinMediumGPA*POverallAdm/avgMediumGPA
+  } else if (YourGPA>3.24) {
+    PAdmGPA <- avgOlinLowGPA*POverallAdm/avgLowGPA
+  } else {
+    PAdmGPA <-0
+  }
+  # PAdmGPA <- YourGPARange*POverallAdm/
+#print(PAdmGPA(avgOlinHighGPA))
+print(PAdmGPA(3.9))
+
+
+```
