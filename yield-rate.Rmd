@@ -1,0 +1,61 @@
+---
+title: "Olin College's Yield Rate over Time"
+output: html_notebook
+---
+
+## R Notebook Basics
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+## Introduction
+
+Analyzing Olin College's Yield Rate over time.
+
+Yield Rate is how many students accepted by college / how many students get accepted.
+
+## Load Data
+
+Loading in admissions data (pre-formatted in Excel)
+
+Variables Include
+- Percent Admitted (Total, Men, Women)
+- Percent Admitted Yield (Total, Men, Women)
+- Number of Applicants (Total, Men, Women)
+- Number of Admitted (Total, Men, Women)
+- Number Enrolled (Total, Men, Women)
+
+```{r}
+admissions <- read.csv("yield-rate-data.csv")
+admissions
+```
+
+```{r}
+admissions_yield <- admissions$Admissions.yield...total
+admissions_yield
+```
+
+## Admissions Yield Over Time
+
+```{r}
+p <- ggplot(aes(x = Year, y = Admissions.yield...total), data = admissions) + geom_point()
+
+p
+```
+
+
+
+
+
+
+
+
+
+
+
+
