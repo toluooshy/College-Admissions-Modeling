@@ -19,6 +19,13 @@ Analyzing Olin College's Yield Rate over time.
 
 Yield Rate is how many students accepted by college / how many students get accepted.
 
+## Libraries
+
+```{r}
+library(ggplot2)
+```
+
+
 ## Load Data
 
 Loading in admissions data (pre-formatted in Excel)
@@ -30,27 +37,139 @@ Variables Include
 - Number of Admitted (Total, Men, Women)
 - Number Enrolled (Total, Men, Women)
 
+## Convert Data into Dataframe
+
 ```{r}
 admissions <- read.csv("yield-rate-data.csv")
 admissions
 ```
 
-```{r}
-admissions_yield <- admissions$Admissions.yield...total
-admissions_yield
-```
-
-## Admissions Yield Over Time
+## Format Dataframe into TimeSeries
 
 ```{r}
-p <- ggplot(aes(x = Year, y = Admissions.yield...total), data = admissions) + geom_point()
+admissions_ts <- ts(admissions[,-1], start=c(2006), end=c(2021),frequency=1)
+admissions_ts
+```
 
-p
+## Select only Admissions Yield Total
+
+```{r}
+admissions_yield_ts <- ts(admissions[,5], start=c(2006), end=c(2021),frequency=1)
+admissions_yield_ts
 ```
 
 
+```{r}
+is.ts(admissions_ts)
+```
 
+```{r}
+summary(admissions_ts)
+```
 
+## Analyzing Trends
+
+```{r}
+
+ts.plot(admissions_yield_ts)
+abline(reg=lm(admissions_yield_ts~time(admissions_yield_ts)))
+
+```
+
+```{r}
+acf(admissions_yield_ts)
+```
+
+```{r}
+AR <- arima(admissions_yield_ts, order = c(1,0,0))
+print(AR)
+```
+ 
+```{r}
+ts.plot(admissions_yield_ts)
+AR_fit <- admissions_yield_ts - residuals(AR)
+points(AR_fit, type = "l", col = 2, lty = 2)
+```
+
+```{r}
+#Using predict() to make a 1-step forecast
+#predict_AR <- predict(AR)
+
+#Obtaining the 1-step forecast using $pred[1]
+#Alternatively Using predict to make 1-step through 10-step forecasts
+predict(AR, n.ahead = 10)
+```
+
+```{r}
+#plotting the series plus the forecast and 95% prediction intervals
+ts.plot(admissions_yield_ts, xlim = c(2006, 2022))
+AR_forecast <- predict(AR, n.ahead = 10)$pred
+AR_forecast_se <- predict(AR, n.ahead = 10)$se
+points(AR_forecast, type = "l", col = 2)
+points(AR_forecast - 2*AR_forecast_se, type = "l", col = 2, lty = 2)
+points(AR_forecast + 2*AR_forecast_se, type = "l", col = 2, lty = 2)
+```
+
+```{r}
+#Fitting the MA model to admissions_total_yield
+MA <- arima(admissions_yield_ts, order = c(0,0,1))
+print(MA)
+```
+
+```{r}
+#plotting the series along with the MA fitted values
+ts.plot(admissions_yield_ts)
+MA_fit <- admissions_yield_ts - resid(MA)
+points(MA_fit, type = "l", col = 2, lty = 2)
+```
+
+```{r}
+#Making a 1-step forecast based on MA
+predict_MA <- predict(MA)
+
+#Obtaining the 1-step forecast using $pred[1]
+predict_MA$pred[1]
+```
+
+```{r}
+#Alternately Making a 1-step through 10-step forecast based on MA
+predict(MA,n.ahead=10)
+```
+
+```{r}
+#Plotting the AIrPAssenger series plus the forecast and 95% prediction intervals
+ts.plot(admissions_yield_ts, xlim = c(2006, 2022))
+MA_forecasts <- predict(MA, n.ahead = 10)$pred
+MA_forecast_se <- predict(MA, n.ahead = 10)$se
+points(MA_forecasts, type = "l", col = 2)
+points(MA_forecasts - 2*MA_forecast_se, type = "l", col = 2, lty = 2)
+points(MA_forecasts + 2*MA_forecast_se, type = "l", col = 2, lty = 2)
+```
+
+```{r}
+# Find correlation between AR_fit and MA_fit
+cor(AR_fit, MA_fit)
+```
+
+```{r}
+# Find AIC of AR
+AIC(AR)
+```
+
+```{r}
+# Find AIC of MA
+AIC(MA)
+```
+
+```{r}
+# Find BIC of AR
+BIC(AR)
+```
+
+```{r}
+# Find BIC of MA
+BIC(MA)
+```
 
 
 
