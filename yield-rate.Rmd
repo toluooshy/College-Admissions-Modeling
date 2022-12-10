@@ -59,15 +59,19 @@ print(admissions_yield_ts)
 ### Get Summary Statistics of Admissions Timeseries
 
 ```{r}
-summary(admissions_ts)
+summary(admissions_yield_ts)
 ```
 
 ### Analyze General Trend with a Linear Regression Line
 
 ```{r}
 
-ts.plot(admissions_yield_ts, xlab="Year", ylab="Total Yield Percentage", main="Olin College Fall Enrollment, 2006-2021")
-abline(reg=lm(admissions_yield_ts~time(admissions_yield_ts)))
+ts.plot(admissions_yield_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2006-2021", ylim=c(50,80), col = 'black') 
+abline(reg=lm(admissions_yield_ts~time(admissions_yield_ts)), col='red')
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Line"),
+       col = c('black', 'red'),
+       pch = 16)
 
 ```
 
@@ -76,10 +80,12 @@ abline(reg=lm(admissions_yield_ts~time(admissions_yield_ts)))
 To determine what type of series we have, whether it is a white noise, random walk, auto regressive or moving average.
 
 ```{r}
-acf(admissions_yield_ts)
+acf(admissions_yield_ts, main="Autocorrelation of Total Yield Percentage")
 ```
 
 ## ARIMA Modelling
+
+Create AutoRegressive (AR) Model
 
 ```{r}
 AR <- arima(admissions_yield_ts, order = c(1,0,0))
@@ -88,9 +94,13 @@ print(AR)
 
  
 ```{r}
-ts.plot(admissions_yield_ts)
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,80))
 AR_fit <- admissions_yield_ts - residuals(AR)
-points(AR_fit, type = "l", col = 2, lty = 2)
+points(AR_fit, type = "l", col = 'red', lty = 2)
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Line"),
+       col = c('black', 'red'),
+       pch = 16)
 ```
 
 Using predict() to make a 1-step forecast and to make 1-step through 10-step forecasts
@@ -104,12 +114,16 @@ predict(AR, n.ahead = 10)
 Plotting the series plus the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_yield_ts, xlim = c(2006, 2022))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(50, 80))
 AR_forecast <- predict(AR, n.ahead = 10)$pred
 AR_forecast_se <- predict(AR, n.ahead = 10)$se
-points(AR_forecast, type = "l", col = 2)
-points(AR_forecast - 2*AR_forecast_se, type = "l", col = 2, lty = 2)
-points(AR_forecast + 2*AR_forecast_se, type = "l", col = 2, lty = 2)
+points(AR_forecast, type = "l", col = 'red')
+points(AR_forecast - 2*AR_forecast_se, type = "l", col = 'blue', lty = 2)
+points(AR_forecast + 2*AR_forecast_se, type = "l", col = 'blue', lty = 2)
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
+       col = c('black', 'blue', 'red'),
+       pch = 16)
 ```
 
 Fitting the MA model to admissions_total_yield
@@ -122,9 +136,13 @@ print(MA)
 Plotting the series along with the MA fitted values
 
 ```{r}
-ts.plot(admissions_yield_ts)
-MA_fit <- admissions_yield_ts - resid(MA)
-points(MA_fit, type = "l", col = 2, lty = 2)
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,80))
+MA_fit <- admissions_yield_ts - residuals(MA)
+points(MA_fit, type = "l", col = 'red', lty = 2)
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Line"),
+       col = c('black', 'red'),
+       pch = 16)
 ```
 
 Making and obtaining a 1-step forecast based on MA as well as a 10-step forecast
@@ -139,12 +157,16 @@ predict(MA,n.ahead=10)
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_yield_ts, xlim = c(2006, 2022))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "MA Predicted Yield Model Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(50, 80))
 MA_forecasts <- predict(MA, n.ahead = 10)$pred
 MA_forecast_se <- predict(MA, n.ahead = 10)$se
-points(MA_forecasts, type = "l", col = 2)
-points(MA_forecasts - 2*MA_forecast_se, type = "l", col = 2, lty = 2)
-points(MA_forecasts + 2*MA_forecast_se, type = "l", col = 2, lty = 2)
+points(MA_forecasts, type = "l", col = 'red')
+points(MA_forecasts - 2*MA_forecast_se, type = "l", col = 'blue', lty = 2)
+points(MA_forecasts + 2*MA_forecast_se, type = "l", col = 'blue', lty = 2)
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
+       col = c('black', 'blue', 'red'),
+       pch = 16)
 ```
 
 ## Analyzing Models
