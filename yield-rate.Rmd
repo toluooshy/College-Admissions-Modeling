@@ -1,9 +1,9 @@
 ---
-title: "Franklin W. Olin College's Yield Rate over Time"
+title: "Predicting Franklin W. Olin College of Engineering's Yield Rate over time"
 output: html_notebook
 ---
 
-## R Notebook Basics
+## R Notebook Basics - Delete Later
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
@@ -15,9 +15,13 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 
 ## Introduction
 
-Analyzing Olin College's Yield Rate over time.
+In the competitive world of college admissions, many prospective students wanting to apply to the higher echelon of universities often think about many factors such as their standardized test scores, their GPAs, their recommendation letters and their essays. And while all these factors are important for a student's chances of entering their dream university, most of the times, it is also the goal of the university to make sure they accept the right students to build a well-balanced class.
 
-Yield Rate is how many students accepted by college / how many students get accepted.
+A college's yield rate is the percentage of students after having been offered admission calculated by dividing the number of students who choose to enroll at a school in a given year, which is often based on their decision to pay a deposit, by the total number of offers of acceptance sent.
+
+While a higher yield rate does indicate a sign of a more selective college, the statistic is more important for a college to decide how many students to accept in their entering freshman class. If a college miscalculates the percentage of students who accept an offer of admission, they run the risk of either underclassing or overclassing their incoming freshman class. If the university underclasses, they lose the opportunity on tuition money the university could have gained and used to improve their facilities. A university overclassing, on the other hand, may lead to losing out on potential tuition money and a poorer quality of life for their students: an issue that universities like [Northeastern](https://huntnewsnu.com/68925/editorial/op-ed-northeastern-needs-to-fix-the-current-housing-crisis/) and [schools in the University of California](https://www.latimes.com/california/story/2022-09-26/college-housing-shortage-pushes-students-into-crisis-as-most-uc-classes-start-up) system faces now.
+
+And with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves, in our analysis of the Olin College of Engineering, and level up their expectations for their yield rates before going into the next recruitment season. 
 
 ## Setup
 
@@ -197,9 +201,17 @@ BIC(AR)
 BIC(MA)
 ```
 
+## Conclusion
+
+And how should interested applicants use this calculation to their advantage?
+- Be interested in Olin
+- Learn more about it
+
+Many students make the choice, a good choice of attending Olin! <- insert propaganda
 
 ## Resources
 
+- https://en.wikipedia.org/wiki/Yield_(college_admissions)#:~:text=It%20is%20calculated%20by%20dividing,particular%20school%20of%20higher%20education.
 - https://www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma
 - https://rpubs.com/JSHAH/481706
 - https://otexts.com/fpp2/arima-r.html
