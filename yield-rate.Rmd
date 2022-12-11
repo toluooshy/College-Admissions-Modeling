@@ -201,6 +201,125 @@ BIC(AR)
 BIC(MA)
 ```
 
+# Viewing Yield Rate Through The Men/Women Split
+## Formating Data
+### Selecting data to be the tield total of men and women as timeseries
+```{r}
+admissions_men_ts <- ts(admissions_ts[,5], start=c(2006), end=c(2021),frequency=1)
+admissions_women_ts <- ts(admissions_ts[,6],start=c(2006), end=c(2021),frequency=1)
+```
+
+## Analysis of Gendered Data
+### Men
+```{r}
+summary(admissions_men_ts)
+```
+### Women
+```{r}
+summary(admissions_women_ts)
+```
+### Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
+
+## Analyze General Linear Regression Lines
+```{r}
+plot(admissions_women_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2006-2021", ylim=c(45,90), col = 'black') 
+abline(reg=lm(admissions_women_ts~time(admissions_yield_ts)), col='red')
+lines(admissions_men_ts, col = 'blue')
+abline(reg=lm(admissions_men_ts~time(admissions_yield_ts)), col='green')
+legend("topleft",
+       legend = c("Women", "Men", "Women's Fitted Line", "Men's Fitted Line"),
+       col = c('black', 'blue', 'red', 'green'),
+       pch = 16)
+```
+
+## Analyzing With Auto-Correlation
+### Men
+```{r}
+acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
+```
+### Women
+```{r}
+acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
+```
+## ARIMA Modeling
+###Creating AR Models
+```{r}
+ARmen <- arima(admissions_men_ts, order = c(1,0,0))
+ARwomen <- arima(admissions_women_ts, order = c(1,0,0))
+
+plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,80))
+
+lines(admissions_men_ts, col = 'blue')
+
+AR_fit_women <- admissions_women_ts - residuals(ARwomen)
+points(AR_fit_women, type = "l", col = 'red', lty = 2)
+
+AR_fit_men <- admissions_men_ts - residuals(ARmen)
+points(AR_fit_men, type = "l", col = 'green', lty = 2)
+
+legend("topleft",
+       legend = c("Women's Yield Rate", "Men's Yield Rate", "Women's Fitted Line", "Men's Fitted Line"),
+       col = c('black','blue','red','green'),
+       pch = 16)
+```
+Predicting the 1-step forecast throuhg making 1-step through 10-step forecasts
+```{r}
+predict_ARmen <- predict(ARmen)
+predict_ARwomen <- predict(ARwomen)
+predict(ARmen, n.ahead = 10)
+predict(ARwomen, n.ahead = 10)
+```
+Plotting the series plus the forecast and 95% prediction intervals
+```{r}
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(40, 90))
+
+AR_forecastwomen <- predict(ARwomen, n.ahead = 10)$pred
+AR_forecastwomen_se <- predict(ARwomen, n.ahead = 10)$se
+points(AR_forecastwomen, type = "l", col = 'red')
+points(AR_forecastwomen - 2*AR_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+points(AR_forecastwomen + 2*AR_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+
+legend("topleft",
+       legend = c("Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
+       col = c('black', 'red', 'green'),
+       pch = 16)
+
+```
+```{r}
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
+
+AR_forecastmen <- predict(ARmen, n.ahead = 10)$pred
+AR_forecastmen_se <- predict(ARmen, n.ahead = 10)$se
+points(AR_forecastmen, type = "l", col = 'green')
+points(AR_forecastmen - 2*AR_forecastmen_se, type = "l", col = 'purple', lty = 2)
+points(AR_forecastmen + 2*AR_forecastmen_se, type = "l", col = 'purple', lty = 2)
+
+legend("topleft",
+       legend = c("Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
+       col = c('blue', 'green', 'purple'),
+       pch = 16)
+
+```
+## Creating MA Models
+```{r}
+MAmen <- arima(admissions_men_ts, order = c(0,0,1))
+MAwomen <- arima(admissions_women_ts, order = c(0,0,1))
+```
+Plotting th series along with the MA fitted values
+```{r}
+plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,90))
+MA_fitwomen <- admissions_women_ts - residuals(MAwomen)
+points(MA_fitwomen, type = "l", col = 'red', lty = 2)
+
+lines(admissions_men_ts, col = 'blue')
+MA_fitmen <- admissions_men_ts - residuals(MAmen)
+points(MA_fitmen, type = "l", col = 'green', lty = 2)
+
+legend("topleft",
+       legend = c("Women's Yield Rate", "Men's Yield Rate", "Women's Fitted Line", "Men's Fitted Line"),
+       col = c('black','blue', 'red', 'green'),
+       pch = 16)
+```
 ## Conclusion
 
 And how should interested applicants use this calculation to their advantage?
