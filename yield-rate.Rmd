@@ -46,14 +46,14 @@ admissions
 ### Format Total Dataframe into TimeSeries
 
 ```{r}
-admissions_ts <- ts(admissions[,-1], start=c(2006), end=c(2021),frequency=1)
+admissions_ts <- ts(admissions[,-1], start=c(2002), end=c(2021),frequency=1)
 admissions_ts
 ```
 
 ### Select Admissions Yield Total and verify if output is timeseries
 
 ```{r}
-admissions_yield_ts <- ts(admissions_ts[,4], start=c(2006), end=c(2021),frequency=1)
+admissions_yield_ts <- ts(admissions_ts[,1], start=c(2002), end=c(2021),frequency=1)
 admissions_yield_ts
 print(admissions_yield_ts)
 ```
@@ -70,13 +70,15 @@ summary(admissions_yield_ts)
 
 ```{r}
 
-ts.plot(admissions_yield_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2006-2021", ylim=c(50,80), col = 'black') 
+ts.plot(admissions_yield_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2002-2021", ylim=c(50,90), col = 'black', type='o') 
 abline(reg=lm(admissions_yield_ts~time(admissions_yield_ts)), col='red')
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Line"),
        col = c('black', 'red'),
        pch = 16)
-
+ mod1<-lm(admissions_yield_ts~time(admissions_yield_ts))
+ diffs<-diff(admissions_yield_ts)
+ ts.plot(diffs, xlab="Year", ylab="First Difference Yield Percentage", main="First Difference of Olin College Yield Percentage Over Time, 2002-2021", col = 'black', type='o') 
 ```
 
 ## Auto-Correlation
@@ -85,6 +87,8 @@ To determine what type of series we have, whether it is a white noise, random wa
 
 ```{r}
 acf(admissions_yield_ts, main="Autocorrelation of Total Yield Percentage")
+acf(mod1$residuals, main="Autocorrelation of Detrended Total Yield Percentage")
+acf(diffs, main="Autocorrelation of First Difference Total Yield Percentage")
 ```
 
 ## ARIMA Modelling
@@ -98,7 +102,7 @@ print(AR)
 
  
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,80))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100))
 AR_fit <- admissions_yield_ts - residuals(AR)
 points(AR_fit, type = "l", col = 'red', lty = 2)
 legend("topleft",
@@ -118,7 +122,7 @@ predict(AR, n.ahead = 10)
 Plotting the series plus the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(50, 80))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2000, 2022), ylim = c(50, 100))
 AR_forecast <- predict(AR, n.ahead = 10)$pred
 AR_forecast_se <- predict(AR, n.ahead = 10)$se
 points(AR_forecast, type = "l", col = 'red')
@@ -140,7 +144,7 @@ print(MA)
 Plotting the series along with the MA fitted values
 
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,80))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,100))
 MA_fit <- admissions_yield_ts - residuals(MA)
 points(MA_fit, type = "l", col = 'red', lty = 2)
 legend("topleft",
@@ -161,7 +165,7 @@ predict(MA,n.ahead=10)
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "MA Predicted Yield Model Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(50, 80))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "MA Predicted Yield Model Over One Year", col = 'black', xlim = c(2002, 2032), ylim = c(50, 100))
 MA_forecasts <- predict(MA, n.ahead = 10)$pred
 MA_forecast_se <- predict(MA, n.ahead = 10)$se
 points(MA_forecasts, type = "l", col = 'red')
