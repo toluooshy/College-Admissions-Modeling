@@ -305,7 +305,7 @@ legend("topleft",
 MAmen <- arima(admissions_men_ts, order = c(0,0,1))
 MAwomen <- arima(admissions_women_ts, order = c(0,0,1))
 ```
-Plotting th series along with the MA fitted values
+Plotting the series along with the MA fitted values
 ```{r}
 plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,90))
 MA_fitwomen <- admissions_women_ts - residuals(MAwomen)
@@ -320,6 +320,43 @@ legend("topleft",
        col = c('black','blue', 'red', 'green'),
        pch = 16)
 ```
+Making and obtaining a 1-step forecast based on MA as well as a 10-step forecast
+```{r}
+predict_MAmen <- predict(MAmen)
+predict_MAmen$pred[1]
+predict(MAmen,n.ahead=10)
+
+predict_MAwomen <- predict(MAwomen)
+predict_MAwomen$pred[1]
+predict(MAwomen,n.ahead=10)
+
+```
+Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
+```{r}
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(40, 80))
+MA_forecastswomen <- predict(MAwomen, n.ahead = 10)$pred
+MA_forecastwomen_se <- predict(MAwomen, n.ahead = 10)$se
+points(MA_forecastswomen, type = "l", col = 'red')
+points(MA_forecastswomen - 2*MA_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+points(MA_forecastswomen + 2*MA_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
+       col = c('black', 'orange', 'red'),
+       pch = 16)
+```
+```{r}
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
+MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
+MA_forecastmen_se <- predict(MAmen, n.ahead = 10)$se
+points(MA_forecastsmen, type = "l", col = 'red')
+points(MA_forecastsmen - 2*MA_forecastmen_se, type = "l", col = 'orange', lty = 2)
+points(MA_forecastsmen + 2*MA_forecastmen_se, type = "l", col = 'orange', lty = 2)
+legend("topleft",
+       legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
+       col = c('blue', 'purple', 'green'),
+       pch = 16)
+```
+## Cross Analyzing Models
 ## Conclusion
 
 And how should interested applicants use this calculation to their advantage?
