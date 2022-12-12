@@ -128,7 +128,7 @@ Based on using this auto regressive model, the expected yield rate for the incom
 ### Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
 ```{r}
 ### Plotting the series plus the forecast and 95% prediction intervals
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2000, 2022), ylim = c(50, 100))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(45, 100))
 AR_forecast <- predict(AR, n.ahead = 10)$pred
 AR_forecast_se <- predict(AR, n.ahead = 10)$se
 points(AR_forecast, type = "l", col = 'red')
@@ -367,7 +367,7 @@ legend("topright",
        pch = 16)
 ```
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 90))
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 100))
 MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
 MA_forecastmen_se <- predict(MAmen, n.ahead = 10)$se
 points(MA_forecastsmen, type = "l", col = 'chartreuse4')
