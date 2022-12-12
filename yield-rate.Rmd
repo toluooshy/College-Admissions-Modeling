@@ -19,7 +19,7 @@ In the competitive world of college admissions, many prospective students wantin
 
 A college's yield rate is the percentage of students after having been offered admission calculated by dividing the number of students who choose to enroll at a school in a given year, which is often based on their decision to pay a deposit, by the total number of offers of acceptance sent.
 
-While a higher yield rate does indicate a sign of a more selective college, the statistic is more important for a college to decide how many students to accept in their entering freshman class. If a college miscalculates the percentage of students who accept an offer of admission, they run the risk of either underclassing or overclassing their incoming freshman class. If the university underclasses, they lose the opportunity on tuition money the university could have gained and used to improve their facilities. A university overclassing, on the other hand, may lead to losing out on potential tuition money and a poorer quality of life for their students: an issue that universities like [Northeastern](https://huntnewsnu.com/68925/editorial/op-ed-northeastern-needs-to-fix-the-current-housing-crisis/) and [schools in the University of California](https://www.latimes.com/california/story/2022-09-26/college-housing-shortage-pushes-students-into-crisis-as-most-uc-classes-start-up) system faces now.
+While a higher yield rate does indicate a sign of a more selective college, the statistic is more important for a college to decide how many students to accept in their entering first year class. If a college miscalculates the percentage of students who accept an offer of admission, they run the risk of either underclassing or overclassing their incoming first year class. If the university underclasses, they lose the opportunity on tuition money the university could have gained and used to improve their facilities. A university overclassing, on the other hand, may lead to losing out on potential tuition money and a poorer quality of life for their students: an issue that universities like [Northeastern](https://huntnewsnu.com/68925/editorial/op-ed-northeastern-needs-to-fix-the-current-housing-crisis/) and [schools in the University of California](https://www.latimes.com/california/story/2022-09-26/college-housing-shortage-pushes-students-into-crisis-as-most-uc-classes-start-up) system faces now.
 
 And with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves, in our analysis of the Olin College of Engineering, and level up their expectations for their yield rates before going into the next recruitment season. 
 
@@ -210,34 +210,34 @@ admissions_women_ts <- ts(admissions_ts[,6],start=c(2006), end=c(2021),frequency
 ```
 
 ## Analysis of Gendered Data
-### Men
+Men
 ```{r}
 summary(admissions_men_ts)
 ```
-### Women
+Women
 ```{r}
 summary(admissions_women_ts)
 ```
-### Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
+Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
 
 ## Analyze General Linear Regression Lines
 ```{r}
 plot(admissions_women_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2006-2021", ylim=c(45,90), col = 'black') 
 abline(reg=lm(admissions_women_ts~time(admissions_yield_ts)), col='red')
 lines(admissions_men_ts, col = 'blue')
-abline(reg=lm(admissions_men_ts~time(admissions_yield_ts)), col='green')
+abline(reg=lm(admissions_men_ts~time(admissions_yield_ts)), col='chartreuse4')
 legend("topleft",
        legend = c("Women", "Men", "Women's Fitted Line", "Men's Fitted Line"),
-       col = c('black', 'blue', 'red', 'green'),
+       col = c('black', 'blue', 'red', 'chartreuse4'),
        pch = 16)
 ```
 
 ## Analyzing With Auto-Correlation
-### Men
+Men
 ```{r}
 acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
 ```
-### Women
+Women
 ```{r}
 acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
 ```
@@ -247,19 +247,19 @@ acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
 ARmen <- arima(admissions_men_ts, order = c(1,0,0))
 ARwomen <- arima(admissions_women_ts, order = c(1,0,0))
 
-plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,80))
+plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(40,90))
 
 lines(admissions_men_ts, col = 'blue')
 
-AR_fit_women <- admissions_women_ts - residuals(ARwomen)
+AR_fitwomen <- admissions_women_ts - residuals(ARwomen)
 points(AR_fit_women, type = "l", col = 'red', lty = 2)
 
-AR_fit_men <- admissions_men_ts - residuals(ARmen)
-points(AR_fit_men, type = "l", col = 'green', lty = 2)
+AR_fitmen <- admissions_men_ts - residuals(ARmen)
+points(AR_fit_men, type = "l", col = 'chartreuse4', lty = 2)
 
-legend("topleft",
+legend("topright",
        legend = c("Women's Yield Rate", "Men's Yield Rate", "Women's Fitted Line", "Men's Fitted Line"),
-       col = c('black','blue','red','green'),
+       col = c('black','blue','red','chartreuse4'),
        pch = 16)
 ```
 Predicting the 1-step forecast throuhg making 1-step through 10-step forecasts
@@ -276,27 +276,27 @@ ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Wom
 AR_forecastwomen <- predict(ARwomen, n.ahead = 10)$pred
 AR_forecastwomen_se <- predict(ARwomen, n.ahead = 10)$se
 points(AR_forecastwomen, type = "l", col = 'red')
-points(AR_forecastwomen - 2*AR_forecastwomen_se, type = "l", col = 'orange', lty = 2)
-points(AR_forecastwomen + 2*AR_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+points(AR_forecastwomen - 2*AR_forecastwomen_se, type = "l", col = 'darkorange1', lty = 2)
+points(AR_forecastwomen + 2*AR_forecastwomen_se, type = "l", col = 'darkorange1', lty = 2)
 
 legend("topleft",
        legend = c("Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('black', 'red', 'green'),
+       col = c('black', 'red', 'darkorange1'),
        pch = 16)
 
 ```
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 90))
 
 AR_forecastmen <- predict(ARmen, n.ahead = 10)$pred
 AR_forecastmen_se <- predict(ARmen, n.ahead = 10)$se
-points(AR_forecastmen, type = "l", col = 'green')
-points(AR_forecastmen - 2*AR_forecastmen_se, type = "l", col = 'purple', lty = 2)
-points(AR_forecastmen + 2*AR_forecastmen_se, type = "l", col = 'purple', lty = 2)
+points(AR_forecastmen, type = "l", col = 'chartreuse4')
+points(AR_forecastmen - 2*AR_forecastmen_se, type = "l", col = 'darkorchid3', lty = 2)
+points(AR_forecastmen + 2*AR_forecastmen_se, type = "l", col = 'darkorchid3', lty = 2)
 
 legend("topleft",
        legend = c("Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('blue', 'green', 'purple'),
+       col = c('blue', 'chartreuse4', 'darkorchid3'),
        pch = 16)
 
 ```
@@ -313,11 +313,11 @@ points(MA_fitwomen, type = "l", col = 'red', lty = 2)
 
 lines(admissions_men_ts, col = 'blue')
 MA_fitmen <- admissions_men_ts - residuals(MAmen)
-points(MA_fitmen, type = "l", col = 'green', lty = 2)
+points(MA_fitmen, type = "l", col = 'chartreuse4', lty = 2)
 
 legend("topleft",
        legend = c("Women's Yield Rate", "Men's Yield Rate", "Women's Fitted Line", "Men's Fitted Line"),
-       col = c('black','blue', 'red', 'green'),
+       col = c('black','blue', 'red', 'chartreuse4'),
        pch = 16)
 ```
 Making and obtaining a 1-step forecast based on MA as well as a 10-step forecast
@@ -337,33 +337,45 @@ ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Wom
 MA_forecastswomen <- predict(MAwomen, n.ahead = 10)$pred
 MA_forecastwomen_se <- predict(MAwomen, n.ahead = 10)$se
 points(MA_forecastswomen, type = "l", col = 'red')
-points(MA_forecastswomen - 2*MA_forecastwomen_se, type = "l", col = 'orange', lty = 2)
-points(MA_forecastswomen + 2*MA_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+points(MA_forecastswomen - 2*MA_forecastwomen_se, type = "l", col = 'darkorange1', lty = 2)
+points(MA_forecastswomen + 2*MA_forecastwomen_se, type = "l", col = 'darkorange1', lty = 2)
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('black', 'orange', 'red'),
+       col = c('black', 'red','darkorange1'),
        pch = 16)
 ```
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 90))
 MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
 MA_forecastmen_se <- predict(MAmen, n.ahead = 10)$se
-points(MA_forecastsmen, type = "l", col = 'red')
-points(MA_forecastsmen - 2*MA_forecastmen_se, type = "l", col = 'orange', lty = 2)
-points(MA_forecastsmen + 2*MA_forecastmen_se, type = "l", col = 'orange', lty = 2)
+points(MA_forecastsmen, type = "l", col = 'chartreuse4')
+points(MA_forecastsmen - 2*MA_forecastmen_se, type = "l", col = 'darkorchid3', lty = 2)
+points(MA_forecastsmen + 2*MA_forecastmen_se, type = "l", col = 'darkorchid3', lty = 2)
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('blue', 'purple', 'green'),
+       col = c('blue', 'chartreuse4', 'darkorchid3'),
        pch = 16)
 ```
 ## Cross Analyzing Models
+Finding correlation between AR_fitwomen and MA_fitwomen and between AR_fitmen and MA_fitmen
+```{r}
+cor(AR_fitwomen, MA_fitwomen)
+cor(AR_fitmen, MA_fitmen)
+```
+Finding AIC of AR and MA models of both men and women
+```{r}
+AIC(ARmen)
+AIC(ARwomen)
+```
+Finding BIC of AR and models of both men and women
+```{r}
+BIC(ARmen)
+BIC(ARwomen)
+```
 ## Conclusion
+Overall, Olin's yield rate (on average 61.09%) matches up to other colleges and universities that are as selective or more selective. Olin has an admissions rate of around 16%, comparable to schools such as Davidson College (16.93%), Emory University (15.82%), and Boston College (16.66%), which all have yield rates of 49.82%, 35.13%, and 34.60%, signigicantly less than Olin. Even highly regarded schools with more selective admissions rates, such as Tufts University (9.69%), Dartmouth College (6.24%), and Brown University (5.05%) have comparable yield rates to Olin as well at 50.22%, 63.72% and 67.15%.
 
-And how should interested applicants use this calculation to their advantage?
-- Be interested in Olin
-- Learn more about it
-
-Many students make the choice, a good choice of attending Olin! <- insert propaganda
+Olin proves to be as well regarded by the students who were accepted and enrolled as more commonly known prestigious schools. Admitted Olin students accept their offer about as much those schools on average. Though Olin is not a household name like the other listed schools, students who apply to Olin are intrigued by its uniqueness, whether it is the hands-on project based curriculum, its tight knit community, the enchantment sparked by candidates weekend, amongst other factors, making up for its lack of notoriety. 
 
 ## Resources
 
@@ -373,3 +385,4 @@ Many students make the choice, a good choice of attending Olin! <- insert propag
 - https://otexts.com/fpp2/arima-r.html
 - https://www.statology.org/aic-in-r/
 - https://www.statology.org/bic-in-r/
+- https://www.ivywise.com/blog/yield-rates-for-the-class-of-2026/
