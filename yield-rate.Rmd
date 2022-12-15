@@ -3,16 +3,6 @@ title: "Predicting Franklin W. Olin College of Engineering's Yield Rate over tim
 output: html_notebook
 ---
 
-## R Notebook Basics - Delete Later
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
-
 ## Introduction
 
 In the competitive world of college admissions, many prospective students wanting to apply to the higher echelon of universities often think about many factors such as their standardized test scores, their GPAs, their recommendation letters and their essays. And while all these factors are important for a student's chances of entering their dream university, most of the times, it is also the goal of the university to make sure they accept the right students to build a well-balanced class.
@@ -72,13 +62,16 @@ summary(admissions_yield_ts)
 
 ts.plot(admissions_yield_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2002-2021", ylim=c(50,90), col = 'black', type='o') 
 abline(reg=lm(admissions_yield_ts~time(admissions_yield_ts)), col='red')
-legend("topleft",
+legend("topright",
        legend = c("Total Yield Rate", "Fitted Line"),
        col = c('black', 'red'),
        pch = 16)
  mod1<-lm(admissions_yield_ts~time(admissions_yield_ts))
  diffs<-diff(admissions_yield_ts)
- ts.plot(diffs, xlab="Year", ylab="First Difference Yield Percentage", main="First Difference of Olin College Yield Percentage Over Time, 2002-2021", col = 'black', type='o') 
+```
+
+```{r}
+ts.plot(diffs, xlab="Year", ylab="First Difference Yield Percentage", main="First Difference of Olin College Yield Percentage Over Time, 2002-2021", col = 'black', type='o') 
 ```
 
 ## Auto-Correlation
@@ -102,7 +95,7 @@ print(AR)
 
  
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100),type='o')
 AR_fit <- admissions_yield_ts - residuals(AR)
 points(AR_fit, type = "l", col = 'red', lty = 2)
 legend("topleft",
@@ -122,10 +115,10 @@ predict(AR, n.ahead = 10)
 Plotting the series plus the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2000, 2022), ylim = c(50, 100))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2000, 2022), ylim = c(40, 100),type='o')
 AR_forecast <- predict(AR, n.ahead = 10)$pred
 AR_forecast_se <- predict(AR, n.ahead = 10)$se
-points(AR_forecast, type = "l", col = 'red')
+points(AR_forecast, type = "o", col = 'red')
 points(AR_forecast - 2*AR_forecast_se, type = "l", col = 'blue', lty = 2)
 points(AR_forecast + 2*AR_forecast_se, type = "l", col = 'blue', lty = 2)
 legend("topleft",
@@ -144,7 +137,7 @@ print(MA)
 Plotting the series along with the MA fitted values
 
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,100))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,100),type='o')
 MA_fit <- admissions_yield_ts - residuals(MA)
 points(MA_fit, type = "l", col = 'red', lty = 2)
 legend("topleft",
@@ -165,10 +158,10 @@ predict(MA,n.ahead=10)
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "MA Predicted Yield Model Over One Year", col = 'black', xlim = c(2002, 2032), ylim = c(50, 100))
+ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "MA Predicted Yield Model Over One Year", col = 'black', xlim = c(2002, 2032), ylim = c(40, 100),type='o')
 MA_forecasts <- predict(MA, n.ahead = 10)$pred
 MA_forecast_se <- predict(MA, n.ahead = 10)$se
-points(MA_forecasts, type = "l", col = 'red')
+points(MA_forecasts, type = "o", col = 'red')
 points(MA_forecasts - 2*MA_forecast_se, type = "l", col = 'blue', lty = 2)
 points(MA_forecasts + 2*MA_forecast_se, type = "l", col = 'blue', lty = 2)
 legend("topleft",
@@ -206,30 +199,37 @@ BIC(MA)
 ```
 
 # Viewing Yield Rate Through The Men/Women Split
+
 ## Formating Data
+
 ### Selecting data to be the tield total of men and women as timeseries
+
 ```{r}
-admissions_men_ts <- ts(admissions_ts[,5], start=c(2006), end=c(2021),frequency=1)
-admissions_women_ts <- ts(admissions_ts[,6],start=c(2006), end=c(2021),frequency=1)
+admissions_men_ts <- ts(admissions_ts[,5], start=c(2002), end=c(2021),frequency=1)
+admissions_women_ts <- ts(admissions_ts[,6],start=c(2002), end=c(2021),frequency=1)
 ```
 
 ## Analysis of Gendered Data
+
 ### Men
+
 ```{r}
 summary(admissions_men_ts)
 ```
 ### Women
+
 ```{r}
 summary(admissions_women_ts)
 ```
-### Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
+
+Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
 
 ## Analyze General Linear Regression Lines
 ```{r}
-plot(admissions_women_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2006-2021", ylim=c(45,90), col = 'black') 
-abline(reg=lm(admissions_women_ts~time(admissions_yield_ts)), col='red')
+plot(admissions_women_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2002-2021", ylim=c(20,100), col = 'black') 
+abline(reg=lm(admissions_women_ts~time(admissions_women_ts)), col='red')
 lines(admissions_men_ts, col = 'blue')
-abline(reg=lm(admissions_men_ts~time(admissions_yield_ts)), col='green')
+abline(reg=lm(admissions_men_ts~time(admissions_women_ts)), col='green')
 legend("topleft",
        legend = c("Women", "Men", "Women's Fitted Line", "Men's Fitted Line"),
        col = c('black', 'blue', 'red', 'green'),
@@ -237,21 +237,17 @@ legend("topleft",
 ```
 
 ## Analyzing With Auto-Correlation
+
 ### Men
-```{r}
-acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
-```
-### Women
-```{r}
-acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
-```
+
 ## ARIMA Modeling
-###Creating AR Models
+### Creating AR Models
+
 ```{r}
 ARmen <- arima(admissions_men_ts, order = c(1,0,0))
 ARwomen <- arima(admissions_women_ts, order = c(1,0,0))
 
-plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,80))
+plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(0,100))
 
 lines(admissions_men_ts, col = 'blue')
 
@@ -261,11 +257,12 @@ points(AR_fit_women, type = "l", col = 'red', lty = 2)
 AR_fit_men <- admissions_men_ts - residuals(ARmen)
 points(AR_fit_men, type = "l", col = 'green', lty = 2)
 
-legend("topleft",
+legend("bottomright",
        legend = c("Women's Yield Rate", "Men's Yield Rate", "Women's Fitted Line", "Men's Fitted Line"),
        col = c('black','blue','red','green'),
        pch = 16)
 ```
+
 Predicting the 1-step forecast throuhg making 1-step through 10-step forecasts
 ```{r}
 predict_ARmen <- predict(ARmen)
@@ -273,45 +270,51 @@ predict_ARwomen <- predict(ARwomen)
 predict(ARmen, n.ahead = 10)
 predict(ARwomen, n.ahead = 10)
 ```
+
 Plotting the series plus the forecast and 95% prediction intervals
+
 ```{r}
-ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(40, 90))
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(0, 100),type='o')
 
 AR_forecastwomen <- predict(ARwomen, n.ahead = 10)$pred
 AR_forecastwomen_se <- predict(ARwomen, n.ahead = 10)$se
-points(AR_forecastwomen, type = "l", col = 'red')
-points(AR_forecastwomen - 2*AR_forecastwomen_se, type = "l", col = 'orange', lty = 2)
-points(AR_forecastwomen + 2*AR_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+points(AR_forecastwomen, type = "o", col = 'red')
+points(AR_forecastwomen - 2*AR_forecastwomen_se, type = "l", col = 'blue', lty = 2)
+points(AR_forecastwomen + 2*AR_forecastwomen_se, type = "l", col = 'blue', lty = 2)
 
 legend("topleft",
        legend = c("Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('black', 'red', 'green'),
+       col = c('black', 'red', 'blue'),
        pch = 16)
-
 ```
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
 
 AR_forecastmen <- predict(ARmen, n.ahead = 10)$pred
 AR_forecastmen_se <- predict(ARmen, n.ahead = 10)$se
-points(AR_forecastmen, type = "l", col = 'green')
-points(AR_forecastmen - 2*AR_forecastmen_se, type = "l", col = 'purple', lty = 2)
-points(AR_forecastmen + 2*AR_forecastmen_se, type = "l", col = 'purple', lty = 2)
+points(AR_forecastmen, type = "o", col = 'red')
+points(AR_forecastmen - 2*AR_forecastmen_se, type = "l", col = 'blue', lty = 2)
+points(AR_forecastmen + 2*AR_forecastmen_se, type = "l", col = 'blue', lty = 2)
 
 legend("topleft",
        legend = c("Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('blue', 'green', 'purple'),
+       col = c('black', 'red', 'blue'),
        pch = 16)
 
 ```
+
 ## Creating MA Models
+
 ```{r}
 MAmen <- arima(admissions_men_ts, order = c(0,0,1))
 MAwomen <- arima(admissions_women_ts, order = c(0,0,1))
 ```
+
 Plotting the series along with the MA fitted values
+
 ```{r}
-plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,90))
+plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(20,100))
+
 MA_fitwomen <- admissions_women_ts - residuals(MAwomen)
 points(MA_fitwomen, type = "l", col = 'red', lty = 2)
 
@@ -324,7 +327,9 @@ legend("topleft",
        col = c('black','blue', 'red', 'green'),
        pch = 16)
 ```
+
 Making and obtaining a 1-step forecast based on MA as well as a 10-step forecast
+
 ```{r}
 predict_MAmen <- predict(MAmen)
 predict_MAmen$pred[1]
@@ -335,32 +340,36 @@ predict_MAwomen$pred[1]
 predict(MAwomen,n.ahead=10)
 
 ```
+
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
+
 ```{r}
-ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(40, 80))
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
 MA_forecastswomen <- predict(MAwomen, n.ahead = 10)$pred
 MA_forecastwomen_se <- predict(MAwomen, n.ahead = 10)$se
-points(MA_forecastswomen, type = "l", col = 'red')
-points(MA_forecastswomen - 2*MA_forecastwomen_se, type = "l", col = 'orange', lty = 2)
-points(MA_forecastswomen + 2*MA_forecastwomen_se, type = "l", col = 'orange', lty = 2)
+points(MA_forecastswomen, type = "o", col = 'red')
+points(MA_forecastswomen - 2*MA_forecastwomen_se, type = "l", col = 'blue', lty = 2)
+points(MA_forecastswomen + 2*MA_forecastwomen_se, type = "l", col = 'blue', lty = 2)
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('black', 'orange', 'red'),
+       col = c('black', 'red', 'blue'),
        pch = 16)
 ```
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
 MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
 MA_forecastmen_se <- predict(MAmen, n.ahead = 10)$se
-points(MA_forecastsmen, type = "l", col = 'red')
-points(MA_forecastsmen - 2*MA_forecastmen_se, type = "l", col = 'orange', lty = 2)
-points(MA_forecastsmen + 2*MA_forecastmen_se, type = "l", col = 'orange', lty = 2)
+points(MA_forecastsmen, type = "o", col = 'red')
+points(MA_forecastsmen - 2*MA_forecastmen_se, type = "l", col = 'blue', lty = 2)
+points(MA_forecastsmen + 2*MA_forecastmen_se, type = "l", col = 'blue', lty = 2)
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('blue', 'purple', 'green'),
+       col = c('black', 'red', 'blue'),
        pch = 16)
 ```
+
 ## Cross Analyzing Models
+
 ## Conclusion
 
 And how should interested applicants use this calculation to their advantage?
