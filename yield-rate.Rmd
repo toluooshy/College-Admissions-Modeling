@@ -96,14 +96,10 @@ Modelling our yield rate data using AR gives us the following fitted line:
 ```{r}
 AR <- arima(admissions_yield_ts, order = c(1,0,0))
 print(AR)
-
-<<<<<<< HEAD
+```
  
 ```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100),type='o')
-=======
-ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100))
->>>>>>> 6439d432ea5e3474cd682a5cfde65c6695dbe891
 AR_fit <- admissions_yield_ts - residuals(AR)
 points(AR_fit, type = "l", col = 'red', lty = 2)
 legend("topleft",
@@ -232,11 +228,7 @@ summary(admissions_men_ts)
 summary(admissions_women_ts)
 ```
 
-<<<<<<< HEAD
-Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
-=======
-### Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each.
->>>>>>> 6439d432ea5e3474cd682a5cfde65c6695dbe891
+Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each.
 
 ## Analyze General Linear Regression Lines
 
@@ -255,10 +247,10 @@ legend("topleft",
 
 ### Men
 
-<<<<<<< HEAD
 ## ARIMA Modeling
+
 ### Creating AR Models
-=======
+
 ```{r}
 acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
 ```
@@ -268,11 +260,6 @@ acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
 ```{r}
 acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
 ```
-
-## ARIMA Modeling
-
-###Creating AR Models
->>>>>>> 6439d432ea5e3474cd682a5cfde65c6695dbe891
 
 ```{r}
 ARmen <- arima(admissions_men_ts, order = c(1,0,0))
