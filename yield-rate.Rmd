@@ -287,6 +287,16 @@ title("Autocorrelation of Women's Yield Percentage")
 ## ARIMA Modeling
 ### Creating AR Models
 ```{r}
+acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
+```
+
+### Women
+
+```{r}
+acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
+```
+
+```{r}
 ARmen <- arima(admissions_men_ts, order = c(1,0,0))
 ARwomen <- arima(admissions_women_ts, order = c(1,0,0))
 
@@ -326,7 +336,11 @@ Based on the AR model for the men/women split, Olin 2022 has a yield rate of 68.
 Plotting the series plus the forecast and 95% prediction intervals
 
 ```{r}
+<<<<<<< HEAD
 ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over Ten Years", col = 'black', xlim = c(2005, 2031), ylim = c(40, 90),type='o')
+=======
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(0, 100),type='o')
+>>>>>>> parent of 8750e12 (Extend ten years)
 
 AR_forecastwomen <- predict(ARwomen, n.ahead = 10)$pred
 AR_forecastwomen_se <- predict(ARwomen, n.ahead = 10)$se
@@ -342,8 +356,12 @@ legend("topleft",
 ```
 
 ```{r}
+<<<<<<< HEAD
 
 ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over Ten Years", col = 'blue', xlim = c(2006, 2031), ylim = c(50, 105))
+=======
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
+>>>>>>> parent of 8750e12 (Extend ten years)
 
 AR_forecastmen <- predict(ARmen, n.ahead = 10)$pred
 AR_forecastmen_se <- predict(ARmen, n.ahead = 10)$se
@@ -403,7 +421,11 @@ While analyzing the data from the moving model for the data for men and women, t
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
 
 ```{r}
+<<<<<<< HEAD
 ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over Ten Years", col = 'black', xlim = c(2005, 2031), ylim = c(40, 90),type='o')
+=======
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
+>>>>>>> parent of 8750e12 (Extend ten years)
 MA_forecastswomen <- predict(MAwomen, n.ahead = 10)$pred
 MA_forecastwomen_se <- predict(MAwomen, n.ahead = 10)$se
 points(MA_forecastswomen, type = "o", col = 'red')
@@ -416,7 +438,11 @@ legend("topleft",
 ```
 
 ```{r}
+<<<<<<< HEAD
 ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over Ten Years", col = 'blue', xlim = c(2006, 2031), ylim = c(50, 105))
+=======
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
+>>>>>>> parent of 8750e12 (Extend ten years)
 MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
 MA_forecastmen_se <- predict(MAmen, n.ahead = 10)$se
 points(MA_forecastsmen, type = "o", col = 'chartreuse4')
@@ -427,6 +453,7 @@ legend("topright",
        col = c('blue', 'chartreuse4', 'darkorchid3'),
        pch = 16)
 ```
+<<<<<<< HEAD
 ## Cross Analyzing Models
 ### Finding correlation between AR_fitwomen and MA_fitwomen and between AR_fitmen and MA_fitmen
 ```{r}
@@ -446,6 +473,10 @@ BIC(ARmen)
 BIC(ARwomen)
 ```
 The correlation between the AR and MA models for women is highly correlated, as well as the AR and MA models for men. They are not as closely correlated as the when we modeled strictly total yield, but there is a clear relation between the AR and MA models for both genders. There does not appear to be much correlation when comparing the yield rates between men and women. 
+=======
+
+## Cross Analyzing Models
+>>>>>>> parent of 8750e12 (Extend ten years)
 
 ## Conclusion
 Overall, Olin's yield rate (on average 61.09%) matches up to other colleges and universities that are as selective or more selective. Olin has an admissions rate of around 16%, comparable to schools such as Davidson College (16.93%), Emory University (15.82%), and Boston College (16.66%), which all have yield rates of 49.82%, 35.13%, and 34.60%, significantly less than Olin. Even highly regarded schools with more selective admissions rates, such as Tufts University (9.69%), Dartmouth College (6.24%), and Brown University (5.05%) have comparable yield rates to Olin as well at 50.22%, 63.72% and 67.15%.
