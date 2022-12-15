@@ -5,11 +5,11 @@ output: html_notebook
 
 ## R Notebook Basics - Delete Later
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*.
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
@@ -21,7 +21,7 @@ A college's yield rate is the percentage of students after having been offered a
 
 While a higher yield rate does indicate a sign of a more selective college, the statistic is more important for a college to decide how many students to accept in their entering freshman class. If a college miscalculates the percentage of students who accept an offer of admission, they run the risk of either underclassing or overclassing their incoming freshman class. If the university underclasses, they lose the opportunity on tuition money the university could have gained and used to improve their facilities. A university overclassing, on the other hand, may lead to losing out on potential tuition money and a poorer quality of life for their students: an issue that universities like [Northeastern](https://huntnewsnu.com/68925/editorial/op-ed-northeastern-needs-to-fix-the-current-housing-crisis/) and [schools in the University of California](https://www.latimes.com/california/story/2022-09-26/college-housing-shortage-pushes-students-into-crisis-as-most-uc-classes-start-up) system faces now.
 
-And with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves, in our analysis of the Olin College of Engineering, and level up their expectations for their yield rates before going into the next recruitment season. 
+And with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves, in our analysis of the Olin College of Engineering, and level up their expectations for their yield rates before going into the next recruitment season.
 
 ## Setup
 
@@ -29,12 +29,7 @@ And with those risks, every college, since it is essential to keep students happ
 
 Loading in admissions data (pre-formatted in Excel)
 
-Variables Include
-- Percent Admitted (Total, Men, Women)
-- Percent Admitted Yield (Total, Men, Women)
-- Number of Applicants (Total, Men, Women)
-- Number of Admitted (Total, Men, Women)
-- Number Enrolled (Total, Men, Women)
+Variables Include - Percent Admitted (Total, Men, Women) - Percent Admitted Yield (Total, Men, Women) - Number of Applicants (Total, Men, Women) - Number of Admitted (Total, Men, Women) - Number Enrolled (Total, Men, Women)
 
 ### Convert Data into Dataframe
 
@@ -93,15 +88,22 @@ acf(diffs, main="Autocorrelation of First Difference Total Yield Percentage")
 
 ## ARIMA Modelling
 
-Create AutoRegressive (AR) Model
+To model past admissions data in order to predict future yield rates, we used the statistical model known as the ARIMA model, which stands for Auto Regressive Integrated Moving Average. This model is based on the idea that the information in the past values of a time series data set alone can be used to predict future values and is the integration of two simpler models commonly used for analyzing and forecasting time series data.
+
+This type of model is commonly used to model time series data, which is a sequence of data with values recorded over regular time intervals. This works great in our case because we're looking at admissions yield rates at the regular time interval of one academic year.
+
+Another thing to note about ARIMA modelling is that it is used to model data that is stationary. Stationarity refers to the characteristic of observations that don't depend on time. For example, a dataset where the stationarity condition doesn't hold is seasonal rainfall since different times of the year will yield different values. In other words, a random variable that is a time series is stationary if its statistical properties (such as mean and variance) are all constant over time.
+
+## AutoRegressive (AR) Modelling
+
+This is a regrission model built on top of the concept of autocorrelation, where the dependent variable depends on the past values of itself. Autocorrelation relates the same set of observations across different timing. As shown in the equation below, in an AR model, observations are computed from prior terms. This equation takes in a parameter p which is the lag order. This is the number of prior time steps to include in the regression model.
+![](https://lh4.googleusercontent.com/C9dxMuYkPOjvubqZlwyFA9ekZUzYPoUrXduJ5o5FATyiDaytUXy-0VYKO9HyeutVzKdEP8sTY_zRnTIYL5n2ra1kr1z-EmEvQ90y3KlqBurP8Ssnw8P37qN7x1fVdUa1w_TuX-kLd4a9_bTJ_ELfX6dT-rpXL2PnrrP-u3BKCd7dJ30R2IUj-6II9J2DntA8){width="447"}
+Modelling our yield rate data using AR gives us the following fitted line:
 
 ```{r}
 AR <- arima(admissions_yield_ts, order = c(1,0,0))
 print(AR)
-```
 
- 
-```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100))
 AR_fit <- admissions_yield_ts - residuals(AR)
 points(AR_fit, type = "l", col = 'red', lty = 2)
@@ -111,15 +113,14 @@ legend("topleft",
        pch = 16)
 ```
 
-Using predict() to make a 1-step forecast and to make 1-step through 10-step forecasts
+Next, we used predict() to make a 1-step forecast and to make 1-step through 10-step forecasts:
 
 ```{r}
 predict_AR <- predict(AR)
-
 predict(AR, n.ahead = 10)
 ```
 
-Plotting the series plus the forecast and 95% prediction intervals
+Plotting the series along with the forecast prediction and 95% prediction intervals:
 
 ```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over One Year", col = 'black', xlim = c(2000, 2022), ylim = c(50, 100))
@@ -130,9 +131,11 @@ points(AR_forecast - 2*AR_forecast_se, type = "l", col = 'blue', lty = 2)
 points(AR_forecast + 2*AR_forecast_se, type = "l", col = 'blue', lty = 2)
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('black', 'blue', 'red'),
+       col = c('black', 'red', 'blue'),
        pch = 16)
 ```
+
+## Moving Average (MA) Modelling
 
 Fitting the MA model to admissions_total_yield
 
@@ -173,7 +176,7 @@ points(MA_forecasts - 2*MA_forecast_se, type = "l", col = 'blue', lty = 2)
 points(MA_forecasts + 2*MA_forecast_se, type = "l", col = 'blue', lty = 2)
 legend("topleft",
        legend = c("Total Yield Rate", "Fitted Prediction", "95% Confidence Interval"),
-       col = c('black', 'blue', 'red'),
+       col = c('black', 'red', 'blue'),
        pch = 16)
 ```
 
@@ -206,25 +209,34 @@ BIC(MA)
 ```
 
 # Viewing Yield Rate Through The Men/Women Split
+
 ## Formating Data
+
 ### Selecting data to be the tield total of men and women as timeseries
+
 ```{r}
 admissions_men_ts <- ts(admissions_ts[,5], start=c(2006), end=c(2021),frequency=1)
 admissions_women_ts <- ts(admissions_ts[,6],start=c(2006), end=c(2021),frequency=1)
 ```
 
 ## Analysis of Gendered Data
+
 ### Men
+
 ```{r}
 summary(admissions_men_ts)
 ```
+
 ### Women
+
 ```{r}
 summary(admissions_women_ts)
 ```
-### Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
+
+### Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each.
 
 ## Analyze General Linear Regression Lines
+
 ```{r}
 plot(admissions_women_ts, xlab="Year", ylab="Yield Percentage", main="Olin College Yield Percentage Over Time, 2006-2021", ylim=c(45,90), col = 'black') 
 abline(reg=lm(admissions_women_ts~time(admissions_yield_ts)), col='red')
@@ -237,16 +249,23 @@ legend("topleft",
 ```
 
 ## Analyzing With Auto-Correlation
+
 ### Men
+
 ```{r}
 acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
 ```
+
 ### Women
+
 ```{r}
 acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
 ```
+
 ## ARIMA Modeling
+
 ###Creating AR Models
+
 ```{r}
 ARmen <- arima(admissions_men_ts, order = c(1,0,0))
 ARwomen <- arima(admissions_women_ts, order = c(1,0,0))
@@ -266,14 +285,18 @@ legend("topleft",
        col = c('black','blue','red','green'),
        pch = 16)
 ```
+
 Predicting the 1-step forecast throuhg making 1-step through 10-step forecasts
+
 ```{r}
 predict_ARmen <- predict(ARmen)
 predict_ARwomen <- predict(ARwomen)
 predict(ARmen, n.ahead = 10)
 predict(ARwomen, n.ahead = 10)
 ```
+
 Plotting the series plus the forecast and 95% prediction intervals
+
 ```{r}
 ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(40, 90))
 
@@ -289,6 +312,7 @@ legend("topleft",
        pch = 16)
 
 ```
+
 ```{r}
 ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
 
@@ -304,12 +328,16 @@ legend("topleft",
        pch = 16)
 
 ```
+
 ## Creating MA Models
+
 ```{r}
 MAmen <- arima(admissions_men_ts, order = c(0,0,1))
 MAwomen <- arima(admissions_women_ts, order = c(0,0,1))
 ```
+
 Plotting the series along with the MA fitted values
+
 ```{r}
 plot(admissions_women_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,90))
 MA_fitwomen <- admissions_women_ts - residuals(MAwomen)
@@ -324,7 +352,9 @@ legend("topleft",
        col = c('black','blue', 'red', 'green'),
        pch = 16)
 ```
+
 Making and obtaining a 1-step forecast based on MA as well as a 10-step forecast
+
 ```{r}
 predict_MAmen <- predict(MAmen)
 predict_MAmen$pred[1]
@@ -335,7 +365,9 @@ predict_MAwomen$pred[1]
 predict(MAwomen,n.ahead=10)
 
 ```
+
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
+
 ```{r}
 ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over One Year", col = 'black', xlim = c(2006, 2022), ylim = c(40, 80))
 MA_forecastswomen <- predict(MAwomen, n.ahead = 10)$pred
@@ -348,6 +380,7 @@ legend("topleft",
        col = c('black', 'orange', 'red'),
        pch = 16)
 ```
+
 ```{r}
 ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'blue', xlim = c(2006, 2022), ylim = c(50, 80))
 MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
@@ -360,20 +393,22 @@ legend("topleft",
        col = c('blue', 'purple', 'green'),
        pch = 16)
 ```
+
 ## Cross Analyzing Models
+
 ## Conclusion
 
-And how should interested applicants use this calculation to their advantage?
-- Be interested in Olin
-- Learn more about it
+And how should interested applicants use this calculation to their advantage? - Be interested in Olin - Learn more about it
 
-Many students make the choice, a good choice of attending Olin! <- insert propaganda
+Many students make the choice, a good choice of attending Olin! \<- insert propaganda
 
 ## Resources
 
-- https://en.wikipedia.org/wiki/Yield_(college_admissions)#:~:text=It%20is%20calculated%20by%20dividing,particular%20school%20of%20higher%20education.
-- https://www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma
-- https://rpubs.com/JSHAH/481706
-- https://otexts.com/fpp2/arima-r.html
-- https://www.statology.org/aic-in-r/
-- https://www.statology.org/bic-in-r/
+-   [https://en.wikipedia.org/wiki/Yield\_(college_admissions)\#](https://en.wikipedia.org/wiki/Yield_(college_admissions)#){.uri}:\~:text=It%20is%20calculated%20by%20dividing,particular%20school%20of%20higher%20education.
+-   <https://www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma>
+-   <https://rpubs.com/JSHAH/481706>
+-   <https://otexts.com/fpp2/arima-r.html>
+-   <https://www.statology.org/aic-in-r/>
+-   <https://www.statology.org/bic-in-r/>
+-   <https://bookdown.org/JakeEsprabens/431-Time-Series/>
+-   <https://mybiostats.files.wordpress.com/2015/03/time-series-analysis-and-its-applications-with-examples-in-r.pdf>
