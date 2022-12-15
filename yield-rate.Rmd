@@ -252,16 +252,6 @@ legend("topleft",
 ### Creating AR Models
 
 ```{r}
-acf(admissions_men_ts, main="Autocorrelation of Men's Yield Percentage")
-```
-
-### Women
-
-```{r}
-acf(admissions_women_ts, main="Autocorrelation of Women's Yield Percentage")
-```
-
-```{r}
 ARmen <- arima(admissions_men_ts, order = c(1,0,0))
 ARwomen <- arima(admissions_women_ts, order = c(1,0,0))
 
@@ -293,7 +283,7 @@ predict(ARwomen, n.ahead = 10)
 Plotting the series plus the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(0, 100),type='o')
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over Ten Years", col = 'black', xlim = c(2002, 2031), ylim = c(0, 100),type='o')
 
 AR_forecastwomen <- predict(ARwomen, n.ahead = 10)$pred
 AR_forecastwomen_se <- predict(ARwomen, n.ahead = 10)$se
@@ -308,7 +298,7 @@ legend("topleft",
 ```
 
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over Ten Years", col = 'black', xlim = c(2002, 2031), ylim = c(20, 100),type='o')
 
 AR_forecastmen <- predict(ARmen, n.ahead = 10)$pred
 AR_forecastmen_se <- predict(ARmen, n.ahead = 10)$se
@@ -364,7 +354,7 @@ predict(MAwomen,n.ahead=10)
 Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
 
 ```{r}
-ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
+ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "MA Predicted Women's Yield Model Over Ten Years", col = 'black', xlim = c(2002, 2031), ylim = c(20, 100),type='o')
 MA_forecastswomen <- predict(MAwomen, n.ahead = 10)$pred
 MA_forecastwomen_se <- predict(MAwomen, n.ahead = 10)$se
 points(MA_forecastswomen, type = "o", col = 'red')
@@ -377,7 +367,7 @@ legend("topleft",
 ```
 
 ```{r}
-ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over One Year", col = 'black', xlim = c(2002, 2022), ylim = c(20, 100),type='o')
+ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "MA Predicted Men's Yield Model Over Ten Years", col = 'black', xlim = c(2002, 2031), ylim = c(20, 100),type='o')
 MA_forecastsmen <- predict(MAmen, n.ahead = 10)$pred
 MA_forecastmen_se <- predict(MAmen, n.ahead = 10)$se
 points(MA_forecastsmen, type = "o", col = 'red')
@@ -388,8 +378,9 @@ legend("topleft",
        col = c('black', 'red', 'blue'),
        pch = 16)
 ```
-
 ## Cross Analyzing Models
+
+<< TODO
 
 ## Conclusion
 
