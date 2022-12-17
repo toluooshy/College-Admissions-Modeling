@@ -232,7 +232,9 @@ BIC(AR)
 BIC(MA)
 ```
 
-The correlation between both the AR and MA models, 0.977, shows that these models both predict similar yield rates over time and choosing one over the other would have little consequences. However, it seems that these models have limitations and predicting further in the future due to the plateau, which is unlikely to occur due to the volatility of yield rates over the course of 2002-2021. AR and MA modeling for this sitation may not bet the most accurate for the long term, but has potential to provide insight on the more short term future.
+Based on all the above findings, it can be sad that for MA models, the output depends on current and past values. MA predictions are derived from a regression-like model based on previous prediction errors rather than the forecast variable's prior values as it would in a regression. What makes AR and MA models different is the relevance of the time. For MA models there is no correlation over time, but for AR models as time passes the level of correlation increases. This implies that the MA model leverages the errors from past data rather than the past data itself to predict future data. While the AR model makes predictions about future data based on past projections. In short AR models use past projections and MA models use error to predict the future, and because of this MA has progressively less noise because the future is "continuously homed in on". This showed in the fact that both the AIC and BIC values for the MA model were lower than their counterparts for the AR model.
+
+The correlation between both the AR and MA models, 0.977, shows that these models both predict similar yield rates over time and choosing one over the other would have little consequences. However, it seems that these models have limitations and predicting further in the future due to the plateau, which is unlikely to occur due to the volatility of yield rates over the course of 2002-2021. AR and MA modeling for this situation may not bet the most accurate for the long term, but has potential to provide insight on the more short term future.
 
 # 6. Viewing Yield Rate Through The Men/Women Split
 
@@ -470,3 +472,5 @@ We have also determined that ARIMA modeling might not have been the most accurat
 -   <https://mybiostats.files.wordpress.com/2015/03/time-series-analysis-and-its-applications-with-examples-in-r.pdf>
 -   <https://olin.edu>
 -   <https://www.ivywise.com/blog/yield-rates-for-the-class-of-2026/>
+
+.
