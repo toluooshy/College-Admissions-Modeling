@@ -13,7 +13,7 @@ While a higher yield rate does indicate a sign of a more selective college, the 
 
 And with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves, in our analysis of the Olin College of Engineering, and level up their expectations for their yield rates before going into the next recruitment season.
 
-In order to conduct our analysis, we explored three methods to predict yield rate: linear regression, auto regression, and moving average. We intended on exploring the benefits and limitations of each model to find the most accurate way to model yield rates. 
+In order to conduct our analysis, we explored three methods to predict yield rate: linear regression, auto regression, and moving average. We intended on exploring the benefits and limitations of each model to find the most accurate way to model yield rates.
 
 # 2. Setup
 
@@ -61,7 +61,7 @@ legend("topright",
        pch = 16)
 ```
 
-According to our line of best fit, the yield percentage is equal to $-0.05727*year + 1214.5108$. This model predicts the yield rate in 2022 to be 56.5114%. 
+According to our line of best fit, the yield percentage is equal to $-0.05727*year + 1214.5108$. This model predicts the yield rate in 2022 to be 56.5114%.
 
 ## 3.3 Autocorrelation
 
@@ -77,14 +77,14 @@ acf(admissions_yield_ts, main="")
 title("Autocorrelation of Total Yield Percentage")
 ```
 
-ACF Plot of the Detrended Total Yield Percentage
+ACF Plot of the Detrended Total Yield Percentage:
 
 ```{r}
 acf(mod1$residuals, main = "")
 title("Autocorrelation of Detrended Total Yield Percentage")
 ```
 
-ACF Plot of the First Difference Total
+ACF Plot of the First Difference Total:
 
 ```{r}
 acf(diffs, main = "")
@@ -101,16 +101,15 @@ This type of model is commonly used to model time series data, which is a sequen
 
 Another thing to note about ARIMA modelling is that it is used to model data that is stationary. Stationarity refers to the characteristic of observations that don't depend on time. For example, a dataset where the stationarity condition doesn't hold is seasonal rainfall since different times of the year will yield different values. In other words, a random variable that is a time series is stationary if its statistical properties (such as mean and variance) are all constant over time.
 
-## 4.1 AutoRegressive (AR) Modelling
+## 4.1 AutoRegressive (AR) Model
 
-This is a regression model built on top of the concept of autocorrelation, where the dependent variable depends on the past values of itself. Autocorrelation relates the same set of observations across different timing. As shown in the equation below, in an AR model, observations are computed from prior terms. This equation takes in a parameter p which is the lag order. This is the number of prior time steps to include in the regression model. $Y_t = \beta_1 + \Phi_1Y_{t-1}+\Phi_2Y_{t-2}+...+\Phi_pY_{t-p}$
-Modelling our yield rate data using AR gives us the following fitted line:
+The AutoRegressive (AR) model is a regression model built on top of the concept of autocorrelation, where the dependent variable depends on the past values of itself. Autocorrelation relates the same set of observations across different timing. As shown in the equation below, in an AR model, observations are computed from prior terms. This equation takes in a parameter p which is the lag order. This is the number of prior time steps to include in the regression model. $Y_t = \beta_1 + \Phi_1Y_{t-1}+\Phi_2Y_{t-2}+...+\Phi_pY_{t-p}$ Modelling our yield rate data using AR gives us the following fitted line:
 
 ```{r}
 AR <- arima(admissions_yield_ts, order = c(1,0,0))
 print(AR)
 ```
- 
+
 ```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Auto Regressive Admission Yield Model Over Time",col='black',ylim=c(50,100),type='o')
 AR_fit <- admissions_yield_ts - residuals(AR)
@@ -128,9 +127,9 @@ predict_AR <- predict(AR)
 predict(AR, n.ahead = 10)
 ```
 
-Based on using this auto regressive model, the expected yield rate for the incoming first-years in 2022 is 61.20327%. we also calculate the expected yield rate each year for ten years. These values increase and plateau around 62.52272% after nine years, increasing gradually until then.  
+Based on using this auto regressive model, the expected yield rate for the incoming first-years in 2022 is 61.20327%. we also calculate the expected yield rate each year for ten years. These values increase and plateau around 62.52272% after nine years, increasing gradually until then.
 
-Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
+Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals:
 
 ```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "AR Predicted Yield Over Ten Years", col = 'black', xlim = c(2000, 2031), ylim = c(50, 100),type='o')
@@ -146,16 +145,16 @@ legend("topleft",
        pch = 16)
 ```
 
-## 4.2 Create Moving Average (MA) model 
+## 4.2 Moving Average (MA) Model
 
-Fitting the MA model to admissions_total_yield
+Like the AR model, the Moving Average (MA) model is used to predict the future based on previous activity. For moving averages the observation of current and upcoming time points is predicted using the error from earlier time points. This means that within a time series, data that would be considered unpredictable or non-deterministic based on expected movement are eliminated. This means however that due to the fact that MA models are based on time and have a set window, MA models tend to be a bit more volatile and responsive to current events. The equation: $MA_k = \frac{1}{k} 1 \sum_{i=n-k+1}^{k} p_{i}$ can be used to calculate the moving average over the last k entries of a data set of n values.
+
+Modelling our yield rate data using MA gives us the following fitted line:
 
 ```{r}
 MA <- arima(admissions_yield_ts, order = c(0,0,1))
 print(MA)
 ```
-
-Plotting the series along with the MA fitted values
 
 ```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main="Fitted Moving Average Admission Yield Model Over Time",col='black',ylim=c(50,100),type='o')
@@ -167,7 +166,7 @@ legend("topleft",
        pch = 16)
 ```
 
-Making and obtaining a 1-step forecast based on MA as well as a 10-step forecast
+Again, we used predict() to make a 1-step forecast and to make 1-step through 10-step forecasts:
 
 ```{r}
 predict_MA <- predict(MA)
@@ -176,9 +175,9 @@ predict_MA$pred[1]
 predict(MA,n.ahead=10)
 ```
 
-Based on the moving average model, the expected yield rate at Olin in 2022 is 61.28009%, which is extremely similar to the yield rate based on the auto regression model. This model also plateaus, but at 62.48790% after two years. 
+Based on the moving average model, the expected yield rate at Olin in 2022 is 61.28009%, which is extremely similar to the yield rate based on the auto regression model. This model also plateaus, but at 62.48790% after two years.
 
-Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals
+Plotting the Total Admissions Yield Percentage data with the forecast and 95% prediction intervals:
 
 ```{r}
 ts.plot(admissions_yield_ts, ylab = "Yield Percentage", main = "MA Predicted Yield Model Over Ten Years", col = 'black', xlim = c(2002, 2032), ylim = c(50, 100),type='o')
@@ -195,15 +194,21 @@ legend("topleft",
 
 # 5. Analyzing Models
 
-Find correlation between AR_fit and MA_fit
+As a first step towards evaluating the validity of our models, we looked into finding the correlation coefficient value between the AR_fit and MA_fit data vectors. In doing this not only could we then determine if both projections were telling a similar story, but we would also get a better idea of how well our projections fit. As shown we first found the correlation between AR_fit and MA_fit.
 
 ```{r}
 cor(AR_fit, MA_fit)
 ```
 
+As a reiteration, our model predicted that the yield rate for the 2022/2023 admissions cycle at Olin College would be somewhere within the low sixties, which implied that intuitively both the fitted AR and MA models were in agreement with each other. Now realizing that the the correlation between the fitted AR and MA was over 97%, it is safe to say that both models do indeed corroborate each other.
+
 ## 5.1 AIC (Akaike Information Criterion)
 
-Find AIC (Akaike Information Criterion) of AR and MA Models
+The Akaike information criterion (AIC) is a mathematical method used when assessing how well a model matches the data that it was derived from.  AIC is a statistical tool used to analyze potential models and choose the one that provides the best fit for the data. AIC is determined by two primary metrics:  how many independent variables were used to create the model and  how well the model reproduces the data.
+
+According to AIC, the model that explains the most variance with the fewest number of independent variables is the best fit, and because of this AIC is most frequently used in statistics for model selection. Essentially, one can select the model that fits the data the best by calculating and contrasting the AIC values of various potential models.
+
+Here we found the AIC of both the AR and MA Models:
 
 ```{r}
 AIC(AR)
@@ -215,7 +220,9 @@ AIC(MA)
 
 ## 5.2 BIC (Bayesian Information Criterion)
 
-Find BIC (Bayesian Information Criterion) of AR and MA Models
+Another statistical metric for comparing and contrasting time series model evaluations is the Bayesian Information Criterion (BIC). Like the AIC, the BIC evaluates validity of models based on their respective number of parameters. Similarly to the AIC, the model to be chosen when using the BIC is the one with the lowest BIC value among the several presented competing models. This is because unkijn which a model having more parameters is more heavily penalized in the context of BIC evaluation.
+
+Here we also found the AIC of both the AR and MA Models:
 
 ```{r}
 BIC(AR)
@@ -225,11 +232,11 @@ BIC(AR)
 BIC(MA)
 ```
 
-The correlation between both the AR and MA models, 0.977, shows that these models both predict similar yield rates over time and choosing one over the other would have little consequences. However, it seems that these models have limitations and predicting further in the future due to the plateau, which is unlikely to occur due to the volatility of yield rates over the course of 2002-2021. AR and MA modeling for this sitation may not bet the most accurate for the long term, but has potential to provide insight on the more short term future. 
+The correlation between both the AR and MA models, 0.977, shows that these models both predict similar yield rates over time and choosing one over the other would have little consequences. However, it seems that these models have limitations and predicting further in the future due to the plateau, which is unlikely to occur due to the volatility of yield rates over the course of 2002-2021. AR and MA modeling for this sitation may not bet the most accurate for the long term, but has potential to provide insight on the more short term future.
 
 # 6. Viewing Yield Rate Through The Men/Women Split
 
-After modeling the data for the total yield rate overtime at Olin, we were curious about what other aspects of yield rate we could analyze. On IPEDS, the only other admissions data available to us that could tie to yield rate is the number of admitted students split by gender. On [Olin's website](olin.edu), it states that 52% of Olin students are female by legal sex, which does not accurately reflect the engineering field, which is dominated by men. We were curious to see how or if yield rate is reflected by Olin's efforts to create a more gender diverse student body. In the following analysis, we conduct the same procedures as we did for the total yield, linear regression, AR, and MA, but now with data for men's yield and women's yield. We do understand that this data is not completely accurate due to Olin consisting of more than men and women, but we were curious to see if this analysis carried any similarity to the total yield or reveal other enlightening results. 
+After modeling the data for the total yield rate overtime at Olin, we were curious about what other aspects of yield rate we could analyze. On IPEDS, the only other admissions data available to us that could tie to yield rate is the number of admitted students split by gender. On [Olin's website](olin.edu), it states that 52% of Olin students are female by legal sex, which does not accurately reflect the engineering field, which is dominated by men. We were curious to see how or if yield rate is reflected by Olin's efforts to create a more gender diverse student body. In the following analysis, we conduct the same procedures as we did for the total yield, linear regression, AR, and MA, but now with data for men's yield and women's yield. We do understand that this data is not completely accurate due to Olin consisting of more than men and women, but we were curious to see if this analysis carried any similarity to the total yield or reveal other enlightening results.
 
 ## 6.1 Formating Data
 
@@ -254,7 +261,7 @@ summary(admissions_men_ts)
 summary(admissions_women_ts)
 ```
 
-Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each. 
+Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each.
 
 ## 6.2.3 Analyzing General Linear Regression Lines
 
@@ -274,7 +281,7 @@ regw = lm(admissions_women_ts~time(admissions_women_ts))
 
 Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each.
 
-The line of best fit for men is $yieldpercentage = -0.4183*year+911.4603$ and for women is $yieldpercentage = -0.6088*year + 1283.8504$. With these equations, we can predict that the yield rate in 2022 for men in 2022 at Olin is 65.6577% and for women is 52.8568%. 
+The line of best fit for men is $yieldpercentage = -0.4183*year+911.4603$ and for women is $yieldpercentage = -0.6088*year + 1283.8504$. With these equations, we can predict that the yield rate in 2022 for men in 2022 at Olin is 65.6577% and for women is 52.8568%.
 
 ## 6.4 ARIMA Modeling
 
@@ -310,6 +317,7 @@ predict(ARwomen, n.ahead = 10)
 ```
 
 Plotting the series plus the forecast and 95% prediction intervals for men and women
+
 ```{r}
 ts.plot(admissions_women_ts, ylab = "Yield Percentage", main = "AR Predicted Women's Yield Over Ten Years", col = 'black', xlim = c(2005, 2031), ylim = c(40, 90),type='o')
 
@@ -325,6 +333,7 @@ legend("topleft",
        col = c('black', 'red', 'darkorange1'),
        pch = 16)
 ```
+
 ```{r}
 ts.plot(admissions_men_ts, ylab = "Yield Percentage", main = "AR Predicted Men's Yield Over Ten Years",type = "o", col = 'blue', xlim = c(2006, 2031), ylim = c(50, 105))
 
@@ -342,7 +351,7 @@ legend("topright",
 
 ```
 
-Based on the AR model for the men/women split, Olin 2022 has a yield rate of 68.74865% for men and 57.76292% for women. When looking at the prediction across ten years, the yield rates do not exactly plateau like the data we calculated for the total yield rate, but they do hover around 69.37% for men and 58.19% for women. 
+Based on the AR model for the men/women split, Olin 2022 has a yield rate of 68.74865% for men and 57.76292% for women. When looking at the prediction across ten years, the yield rates do not exactly plateau like the data we calculated for the total yield rate, but they do hover around 69.37% for men and 58.19% for women.
 
 ## 6.4.2 Creating MA Models
 
@@ -411,11 +420,13 @@ legend("topright",
        col = c('blue', 'chartreuse4', 'darkorchid3'),
        pch = 16)
 ```
+
 While analyzing the data from the moving model for the data for men and women, the predicted yield rates are 66.87653% for men and 55.72670% for women. Though not drastically different than the data we obtained from the AR model, it varies much more than when we compared the AR and MA models for the total yield rates.
 
 ## 6.5 Cross Analyzing Models
 
 Finding correlation between AR_fitwomen and MA_fitwomen and between AR_fitmen and MA_fitmen
+
 ```{r}
 cor(AR_fitwomen, MA_fitwomen)
 cor(AR_fitmen, MA_fitmen)
@@ -437,18 +448,19 @@ BIC(ARmen)
 BIC(ARwomen)
 ```
 
-The correlation between the AR and MA models for women is highly correlated, as well as the AR and MA models for men. They are not as closely correlated as the when we modeled strictly total yield, but there is a clear relation between the AR and MA models for both genders. There does not appear to be much correlation when comparing the yield rates between men and women. 
+The correlation between the AR and MA models for women is highly correlated, as well as the AR and MA models for men. They are not as closely correlated as the when we modeled strictly total yield, but there is a clear relation between the AR and MA models for both genders. There does not appear to be much correlation when comparing the yield rates between men and women.
 
 # 7. Conclusion
+
 Overall, Olin's yield rate (on average 61.09%) matches up to other colleges and universities that are as selective or more selective. Olin has an admissions rate of around 16%, comparable to schools such as Davidson College (16.93%), Emory University (15.82%), and Boston College (16.66%), which all have yield rates of 49.82%, 35.13%, and 34.60%, significantly less than Olin. Even highly regarded schools with more selective admissions rates, such as Tufts University (9.69%), Dartmouth College (6.24%), and Brown University (5.05%) have comparable yield rates to Olin as well at 50.22%, 63.72% and 67.15%.
 
-Olin proves to be as well regarded by the students who were accepted and enrolled as more commonly known prestigious schools. Admitted Olin students accept their offer about as much those schools on average. Though Olin is not a household name like the other listed schools, students who apply to Olin are intrigued by its uniqueness, whether it is the hands-on project based curriculum, its tight knit community, the enchantment sparked by candidates weekend, amongst other factors, making up for its lack of notability. 
+Olin proves to be as well regarded by the students who were accepted and enrolled as more commonly known prestigious schools. Admitted Olin students accept their offer about as much those schools on average. Though Olin is not a household name like the other listed schools, students who apply to Olin are intrigued by its uniqueness, whether it is the hands-on project based curriculum, its tight knit community, the enchantment sparked by candidates weekend, amongst other factors, making up for its lack of notability.
 
-We have also determined that ARIMA modeling might not have been the most accurate method of modeling yield rate at a college. There are many more factors involved in yield, from the factors that influence a student's decision to accept and reject certain college offers (financial status, other college offers, location, and opportunities to name a few), as well as how many applicants an admissions office looks to accept (housing availability and financial status are two examples). Time and previous yield rates do not accurately capture these all of these uncertainties. We have seen volatility in college admissions in times of crisis, such as during the COVID-19 pandemic that describes effects these uncertainties have on college admissions offices. 
+We have also determined that ARIMA modeling might not have been the most accurate method of modeling yield rate at a college. There are many more factors involved in yield, from the factors that influence a student's decision to accept and reject certain college offers (financial status, other college offers, location, and opportunities to name a few), as well as how many applicants an admissions office looks to accept (housing availability and financial status are two examples). Time and previous yield rates do not accurately capture these all of these uncertainties. We have seen volatility in college admissions in times of crisis, such as during the COVID-19 pandemic that describes effects these uncertainties have on college admissions offices.
 
 ## Resources
 
--   <https://en.wikipedia.org/wiki/Yield_(college_admissions)>
+-   [https://en.wikipedia.org/wiki/Yield\_(college_admissions)](https://en.wikipedia.org/wiki/Yield_(college_admissions)){.uri}
 -   <https://www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma>
 -   <https://rpubs.com/JSHAH/481706>
 -   <https://otexts.com/fpp2/arima-r.html>
@@ -458,4 +470,3 @@ We have also determined that ARIMA modeling might not have been the most accurat
 -   <https://mybiostats.files.wordpress.com/2015/03/time-series-analysis-and-its-applications-with-examples-in-r.pdf>
 -   <https://olin.edu>
 -   <https://www.ivywise.com/blog/yield-rates-for-the-class-of-2026/>
-
