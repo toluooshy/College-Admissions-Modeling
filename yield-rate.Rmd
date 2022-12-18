@@ -196,7 +196,7 @@ legend("topleft",
 
 # 5. Analyzing Models
 
-As a first step towards evaluating the validity of our models, we looked into finding the correlation coefficient value between the AR_fit and MA_fit data vectors. In doing this not only could we then determine if both projections were telling a similar story, but we would also get a better idea of how well our projections fit. As shown we first found the correlation between AR_fit and MA_fit.
+As a first step towards evaluating the validity of our models, we looked into finding the correlation coefficient value between the AR_fit and MA_fit data vectors. In doing this, not only could we then determine if both projections were telling a similar story, but we would also get a better idea of how well our projections fit. As shown we first found the correlation between AR_fit and MA_fit.
 
 ```{r}
 cor(AR_fit, MA_fit)
@@ -206,7 +206,7 @@ As a reiteration, our model predicted that the yield rate for the 2022/2023 admi
 
 ## 5.1 AIC (Akaike Information Criterion)
 
-The Akaike information criterion (AIC) is a mathematical method used when assessing how well a model matches the data that it was derived from.  AIC is a statistical tool used to analyze potential models and choose the one that provides the best fit for the data. AIC is determined by two primary metrics:  how many independent variables were used to create the model and  how well the model reproduces the data.
+The Akaike Information Criterion (AIC) is a mathematical method used when assessing how well a model matches the data that it was derived from.  AIC is a statistical tool used to analyze potential models and choose the one that provides the best fit for the data. AIC is determined by two primary metrics:  how many independent variables were used to create the model and  how well the model reproduces the data.
 
 According to AIC, the model that explains the most variance with the fewest number of independent variables is the best fit, and because of this AIC is most frequently used in statistics for model selection. Essentially, one can select the model that fits the data the best by calculating and contrasting the AIC values of various potential models.
 
@@ -234,7 +234,7 @@ BIC(AR)
 BIC(MA)
 ```
 
-Based on all the above findings, it can be sad that for MA models, the output depends on current and past values. MA predictions are derived from a regression-like model based on previous prediction errors rather than the forecast variable's prior values as it would in a regression. What makes AR and MA models different is the relevance of the time. For MA models there is no correlation over time, but for AR models as time passes the level of correlation increases. This implies that the MA model leverages the errors from past data rather than the past data itself to predict future data. While the AR model makes predictions about future data based on past projections. In short AR models use past projections and MA models use error to predict the future, and because of this MA has progressively less noise because the future is "continuously homed in on". This showed in the fact that both the AIC and BIC values for the MA model were lower than their counterparts for the AR model.
+Based on all the above findings, it can be said that for MA models, the output depends on current and past values. MA predictions are derived from a regression-like model based on previous prediction errors rather than the forecast variable's prior values as it would in a regression. What makes AR and MA models different is the relevance of the time. For MA models there is no correlation over time, but for AR models as time passes the level of correlation increases. This implies that the MA model leverages the errors from past data rather than the past data itself to predict future data. While the AR model makes predictions about future data based on past projections. In short AR models use past projections and MA models use error to predict the future, and because of this MA has progressively less noise because the future is "continuously homed in on". This showed in the fact that both the AIC and BIC values for the MA model were lower than their counterparts for the AR model.
 
 The correlation between both the AR and MA models, 0.977, shows that these models both predict similar yield rates over time and choosing one over the other would have little consequences. However, it seems that these models have limitations and predicting further in the future due to the plateau, which is unlikely to occur due to the volatility of yield rates over the course of 2002-2021. AR and MA modeling for this situation may not bet the most accurate for the long term, but has potential to provide insight on the more short term future.
 
@@ -244,7 +244,7 @@ After modeling the data for the total yield rate overtime at Olin, we were curio
 
 ## 6.1 Formating Data
 
-Selecting data to be the tield total of men and women as timeseries
+Selecting data to be the yield total of men and women as timeseries
 
 ```{r}
 admissions_men_ts <- ts(admissions_ts[,2], start=c(2006), end=c(2021),frequency=1)
@@ -282,10 +282,7 @@ legend("topright",
 regm = lm(admissions_men_ts~time(admissions_men_ts))
 regw = lm(admissions_women_ts~time(admissions_women_ts))
 ```
-
-Overall, the yield rate for women is lower on average than the yield rate for men based on the summaries of each.
-
-The line of best fit for men is $yieldpercentage = -0.4183*year+911.4603$ and for women is $yieldpercentage = -0.6088*year + 1283.8504$. With these equations, we can predict that the yield rate in 2022 for men in 2022 at Olin is 65.6577% and for women is 52.8568%.
+The line of best fit for men is $yieldpercentage = -0.4183*year+911.4603$ and for women is $yieldpercentage = -0.6088*year + 1283.8504$. With these equations, we can predict that the yield rate in 2022 for men at Olin is 65.6577% and for women is 52.8568%.
 
 ## 6.4 ARIMA Modeling
 
@@ -355,7 +352,7 @@ legend("topright",
 
 ```
 
-Based on the AR model for the men/women split, Olin 2022 has a yield rate of 68.74865% for men and 57.76292% for women. When looking at the prediction across ten years, the yield rates do not exactly plateau like the data we calculated for the total yield rate, but they do hover around 69.37% for men and 58.19% for women.
+Based on the AR model for the men/women split, Olin in 2022 has a yield rate of 68.74865% for men and 57.76292% for women. When looking at the prediction across ten years, the yield rates do not exactly plateau like the data we calculated for the total yield rate, but they do hover around 69.37% for men and 58.19% for women.
 
 ## 6.4.2 Creating MA Models
 
