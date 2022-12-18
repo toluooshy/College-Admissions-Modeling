@@ -464,17 +464,15 @@ We have also determined that ARIMA modeling might not have been the most accurat
 
 ## Resources
 
--   [https://en.wikipedia.org/wiki/Yield\_(college_admissions)](https://en.wikipedia.org/wiki/Yield_(college_admissions)){.uri}
--   <https://www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma>
--   <https://rpubs.com/JSHAH/481706>
--   <https://bookdown.org/JakeEsprabens/431-Time-Series/introduction-to-time-series.html#stationarity>
--   <https://otexts.com/fpp2/arima-r.html>
--   <https://people.duke.edu/~rnau/411diff.htm>
--   <https://www.statology.org/aic-in-r/>
--   <https://www.statology.org/bic-in-r/>
--   <https://bookdown.org/JakeEsprabens/431-Time-Series/>
--   <https://mybiostats.files.wordpress.com/2015/03/time-series-analysis-and-its-applications-with-examples-in-r.pdf>
--   <https://olin.edu>
--   <https://www.ivywise.com/blog/yield-rates-for-the-class-of-2026/>
-
-.
+-   “Home | Olin College of Engineering.” Olin.edu, 15 Dec. 2022, olin.edu. Accessed 18 Dec. 2022.
+-   “Yield.” Wikipedia, 7 Dec. 2022, en.wikipedia.org/wiki/Yield. Accessed 18 Dec. 2022.
+-   “Arma Function - RDocumentation.” Www.rdocumentation.org, www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma. Accessed 18 Dec. 2022.
+-   “RPubs - Time Series - ARMA Models in R.” Rpubs.com, rpubs.com/JSHAH/481706
+-   Kim, Jake Esprabens, Ari Arango, Joshua. Chapter 1 Introduction to Time Series | Time Series for Beginners. Bookdown.org, bookdown.org/JakeEsprabens/431-Time-Series/introduction-to-time-series.html#stationarity. Accessed 18 Dec. 2022.
+-   “RPubs - ARIMA Model for Forecasting– Example in R.” Rpubs.com, rpubs.com/riazakhan94/arima_with_example.
+-   Shumway, Robert H, and David S Stoffer. Time Series Analysis and Its Applications : With R Examples. Cham, Springer, 2017.
+-   “8.7 ARIMA Modelling in R | Forecasting: Principles and Practice (2nd Ed).” Otexts.com, otexts.com/fpp2/arima-r.html.
+-   “Stationarity and Differencing of Time Series Data.” Duke.edu, 2019, people.duke.edu/~rnau/411diff.htm.
+-   Zach. “How to Calculate AIC in R (Including Examples).” Statology, 20 May 2021, www.statology.org/aic-in-r/.
+-   Springer Texts in Statistics. mybiostats.files.wordpress.com/2015/03/time-series-analysis-and-its-applications-with-examples-in-r.pdf.
+- Moody, Josh. “Universities, Colleges Where Students Are Eager to Enroll.” US News & World Report, US News, 25 Jan. 2021, www.usnews.com/education/best-colleges/articles/universities-colleges-where-students-are-eager-to-enroll.
