@@ -21,7 +21,7 @@ In order to conduct our analysis, we explored three methods to predict yield rat
 
 So to find the yield rate over time for analysis and future predictions, we can take in admissions data (pre-formatted in Excel) from the [Integrated Postsecondary Education Data System](https://nces.ed.gov/ipeds/use-the-data) database of Olin College reported back from 2002.
 
-We can use the simple calculation of the number of students enrolled in the university over the accepted to the university over to get yield rate data. We can also further narrow our data down to a split between the men and the women too. 
+We can use the simple calculation of the number of students enrolled in the university over the accepted to the university over to get yield rate data. We can also further narrow our data down to a split between the men and the women too.
 
 ## 2.2 Convert Data into Dataframe
 
@@ -222,7 +222,7 @@ AIC(MA)
 
 ## 5.2 BIC (Bayesian Information Criterion)
 
-Another statistical metric for comparing and contrasting time series model evaluations is the Bayesian Information Criterion (BIC). Like the AIC, the BIC evaluates validity of models based on their respective number of parameters. Similarly to the AIC, the model to be chosen when using the BIC is the one with the lowest BIC value among the several presented competing models. This is because unkijn which a model having more parameters is more heavily penalized in the context of BIC evaluation.
+Another statistical metric for comparing and contrasting time series model evaluations is the Bayesian Information Criterion (BIC). Like the AIC, the BIC evaluates validity of models based on their respective number of parameters. Similarly to the AIC, the model to be chosen when using the BIC is the one with the lowest BIC value among the several presented competing models. This is because like AIC "less is best" but additionally a model with more parameters is more heavily penalized in the context of BIC evaluation. This was why in the following the BIC values for both the AR and MA models were higher (and therefore worse) than that of the AIC values despite having the same number of respective parameters.
 
 Here we also found the AIC of both the AR and MA Models:
 
@@ -282,6 +282,7 @@ legend("topright",
 regm = lm(admissions_men_ts~time(admissions_men_ts))
 regw = lm(admissions_women_ts~time(admissions_women_ts))
 ```
+
 The line of best fit for men is $yieldpercentage = -0.4183*year+911.4603$ and for women is $yieldpercentage = -0.6088*year + 1283.8504$. With these equations, we can predict that the yield rate in 2022 for men at Olin is 65.6577% and for women is 52.8568%.
 
 ## 6.4 ARIMA Modeling
@@ -461,15 +462,15 @@ We have also determined that ARIMA modeling might not have been the most accurat
 
 ## Resources
 
--   “Home | Olin College of Engineering.” Olin.edu, 15 Dec. 2022, olin.edu. Accessed 18 Dec. 2022.
--   “Yield.” Wikipedia, 7 Dec. 2022, en.wikipedia.org/wiki/Yield. Accessed 18 Dec. 2022.
--   “Arma Function - RDocumentation.” Www.rdocumentation.org, www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma. Accessed 18 Dec. 2022.
--   “RPubs - Time Series - ARMA Models in R.” Rpubs.com, rpubs.com/JSHAH/481706
--   Kim, Jake Esprabens, Ari Arango, Joshua. Chapter 1 Introduction to Time Series | Time Series for Beginners. Bookdown.org, bookdown.org/JakeEsprabens/431-Time-Series/introduction-to-time-series.html#stationarity. Accessed 18 Dec. 2022.
--   “RPubs - ARIMA Model for Forecasting– Example in R.” Rpubs.com, rpubs.com/riazakhan94/arima_with_example.
+-   "Home \| Olin College of Engineering." Olin.edu, 15 Dec. 2022, olin.edu. Accessed 18 Dec. 2022.
+-   "Yield." Wikipedia, 7 Dec. 2022, en.wikipedia.org/wiki/Yield. Accessed 18 Dec. 2022.
+-   "Arma Function - RDocumentation." Www.rdocumentation.org, www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma. Accessed 18 Dec. 2022.
+-   "RPubs - Time Series - ARMA Models in R." Rpubs.com, rpubs.com/JSHAH/481706
+-   Kim, Jake Esprabens, Ari Arango, Joshua. Chapter 1 Introduction to Time Series \| Time Series for Beginners. Bookdown.org, bookdown.org/JakeEsprabens/431-Time-Series/introduction-to-time-series.html#stationarity. Accessed 18 Dec. 2022.
+-   "RPubs - ARIMA Model for Forecasting-- Example in R." Rpubs.com, rpubs.com/riazakhan94/arima_with_example.
 -   Shumway, Robert H, and David S Stoffer. Time Series Analysis and Its Applications : With R Examples. Cham, Springer, 2017.
--   “8.7 ARIMA Modelling in R | Forecasting: Principles and Practice (2nd Ed).” Otexts.com, otexts.com/fpp2/arima-r.html.
--   “Stationarity and Differencing of Time Series Data.” Duke.edu, 2019, people.duke.edu/~rnau/411diff.htm.
--   Zach. “How to Calculate AIC in R (Including Examples).” Statology, 20 May 2021, www.statology.org/aic-in-r/.
+-   "8.7 ARIMA Modelling in R \| Forecasting: Principles and Practice (2nd Ed)." Otexts.com, otexts.com/fpp2/arima-r.html.
+-   "Stationarity and Differencing of Time Series Data." Duke.edu, 2019, people.duke.edu/\~rnau/411diff.htm.
+-   Zach. "How to Calculate AIC in R (Including Examples)." Statology, 20 May 2021, www.statology.org/aic-in-r/.
 -   Springer Texts in Statistics. mybiostats.files.wordpress.com/2015/03/time-series-analysis-and-its-applications-with-examples-in-r.pdf.
-- Moody, Josh. “Universities, Colleges Where Students Are Eager to Enroll.” US News & World Report, US News, 25 Jan. 2021, www.usnews.com/education/best-colleges/articles/universities-colleges-where-students-are-eager-to-enroll.
+-   Moody, Josh. "Universities, Colleges Where Students Are Eager to Enroll." US News & World Report, US News, 25 Jan. 2021, www.usnews.com/education/best-colleges/articles/universities-colleges-where-students-are-eager-to-enroll.
