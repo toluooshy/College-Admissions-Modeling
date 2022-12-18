@@ -67,7 +67,9 @@ According to our line of best fit, the yield percentage is equal to $-0.05727*ye
 
 ## 3.3 Autocorrelation
 
-**Autocorrelation**, is the correlation of a series with a delayed copy of itself as a function of delay. We use autocorrelation to find repeating patterns in data in our data. The plot can provide answers to whether or not our data is white noise or random and if we could use a AR and/or MA model.
+**Autocorrelation**, is the correlation of a series with a delayed copy of itself as a function of delay. We use autocorrelation to find repeating patterns in data in our data. The ACF (autocorrelation function) of the yield rate data can provide answers to whether or not our data can be used to make a good prediction based whether or not it is **stationary**, or a characteristic defined by having a constant mean and variance across the time series.
+
+From our plots below of the ACF of the total yield percentage, we see that every line, except for the first value (which makes sense since the lag would exist if only one value existed), is within the blue confidence intervals which indicates that the data is stationary.
 
 ```{r}
 
@@ -76,24 +78,22 @@ mod1<-lm(admissions_yield_ts~time(admissions_yield_ts))
 diffs<-diff(admissions_yield_ts)
 
 acf(admissions_yield_ts, main="")
-title("Autocorrelation of Total Yield Percentage")
+title("Autocorrelation Plot of Total Yield Percentage")
 ```
 
-ACF Plot of the Detrended Total Yield Percentage:
+We can also view the detrended data, or remove any any underlying trend in the data so we can more easily see subtrends in the data that are seasonal or cyclical, of the total yield percentage. And from that data, we can also see that the detrended data is stationary.
 
 ```{r}
 acf(mod1$residuals, main = "")
 title("Autocorrelation of Detrended Total Yield Percentage")
 ```
 
-ACF Plot of the First Difference Total:
+Lastly, we can view the **First Difference**, which are the series of changes from one period to the next, of the time series. Given that all the lines are between the confidence intervals, we can state that this is stationary as well. However, we can also see that the first difference model of the data is *not* completely random, we can use a forecasting model such as ARIMA to measure events that happen over a period of time.
 
 ```{r}
 acf(diffs, main = "")
 title("Autocorrelation of First Difference Total Yield Percentage")
 ```
-
-Knowing this, we can use ARIMA Modelling to measure events that happen over a period of time.
 
 # 4. ARIMA Modelling
 
@@ -467,7 +467,9 @@ We have also determined that ARIMA modeling might not have been the most accurat
 -   [https://en.wikipedia.org/wiki/Yield\_(college_admissions)](https://en.wikipedia.org/wiki/Yield_(college_admissions)){.uri}
 -   <https://www.rdocumentation.org/packages/tseries/versions/0.7-5/topics/arma>
 -   <https://rpubs.com/JSHAH/481706>
+-   <https://bookdown.org/JakeEsprabens/431-Time-Series/introduction-to-time-series.html#stationarity>
 -   <https://otexts.com/fpp2/arima-r.html>
+-   <https://people.duke.edu/~rnau/411diff.htm>
 -   <https://www.statology.org/aic-in-r/>
 -   <https://www.statology.org/bic-in-r/>
 -   <https://bookdown.org/JakeEsprabens/431-Time-Series/>
