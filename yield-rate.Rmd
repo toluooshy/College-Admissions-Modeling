@@ -19,7 +19,9 @@ In order to conduct our analysis, we explored three methods to predict yield rat
 
 ## 2.1 Load Data
 
-Loading in admissions data (pre-formatted in Excel) from the [Integrated Postsecondary Education Data System](https://nces.ed.gov/ipeds/use-the-data) database.
+So to find the yield rate over time for analysis and future predictions, we can take in admissions data (pre-formatted in Excel) from the [Integrated Postsecondary Education Data System](https://nces.ed.gov/ipeds/use-the-data) database of Olin College reported back from 2002.
+
+We can use the simple calculation of the number of students enrolled in the university over the accepted to the university over to get yield rate data. We can also further narrow our data down to a split between the men and the women too. 
 
 ## 2.2 Convert Data into Dataframe
 
@@ -430,9 +432,9 @@ While analyzing the data from the moving model for the data for men and women, t
 Finding correlation between AR_fitwomen and MA_fitwomen and between AR_fitmen and MA_fitmen
 
 ```{r}
-cor(AR_fitwomen, MA_fitwomen)
-cor(AR_fitmen, MA_fitmen)
-cor(AR_fitmen,AR_fitwomen)
+cor(AR_fit_women, MA_fitwomen)
+cor(AR_fit_men, MA_fitmen)
+cor(AR_fit_men,MA_fitwomen)
 cor(MA_fitmen, MA_fitwomen)
 ```
 
