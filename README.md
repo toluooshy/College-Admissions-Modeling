@@ -1,1 +1,11 @@
 # Yield-Rate-Modeling
+
+**Authors**: Daniel Park, Melody Chiu, Rizza Anderson, Tolulope Oshinowo
+
+In the competitive world of college admissions, many prospective students wanting to apply to the higher echelon of universities often think about many factors, such as their standardized test scores, GPAs, recommendation letters, and essays. While all these factors are essential for a student's chances of entering their dream university, most of the time, it is also the university's goal to ensure they accept the right students to build a well-balanced class.
+
+A college's yield rate is the percentage of students after being offered admission calculated by dividing the number of students who choose to enroll at a school in a given year, often based on their decision to pay a deposit, by the total number of offers of acceptance sent.
+
+While a higher yield rate indicates a more selective college, the statistic is more important for a college to decide how many students to accept in their entering first-year class. For example, suppose a college miscalculates the percentage of students who accept an offer of admission. In that case, they run the risk of either underclassing, admitting fewer students than a university can admit, or overclassing, admitting more students than a university can admit, their incoming first-year class. If the university underclasses, they lose the opportunity to tuition money the university could have gained and used to improve their facilities. A university overclassing, on the other hand, may lead to losing out on possible tuition money and a poorer quality of life for their students: an issue that many universities like [Northeastern](https://huntnewsnu.com/68925/editorial/op-ed-northeastern-needs-to-fix-the-current-housing-crisis/) and [schools in the University of California](https://www.latimes.com/california/story/2022-09-26/college-housing-shortage-pushes-students-into-crisis-as-most-uc-classes-start-up) system.
+
+Therefore, with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves. In this report, we will do an analysis of the Olin College of Engineering and identify what their expectations for their yield rates before going into the next recruitment season.

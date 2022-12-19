@@ -3,6 +3,10 @@ title: "Predicting Franklin W. Olin College of Engineering's Yield Rate over tim
 output: html_notebook
 ---
 
+**Authors**: Daniel Park, Melody Chiu, Rizza Anderson, Tolulope Oshinowo
+
+**MTH2130** | Probabilistic Modeling | David Shuman
+
 # 1. Introduction
 
 In the competitive world of college admissions, many prospective students wanting to apply to the higher echelon of universities often think about many factors, such as their standardized test scores, GPAs, recommendation letters, and essays. While all these factors are essential for a student's chances of entering their dream university, most of the time, it is also the university's goal to ensure they accept the right students to build a well-balanced class.
@@ -11,7 +15,7 @@ A college's yield rate is the percentage of students after being offered admissi
 
 While a higher yield rate indicates a more selective college, the statistic is more important for a college to decide how many students to accept in their entering first-year class. For example, suppose a college miscalculates the percentage of students who accept an offer of admission. In that case, they run the risk of either underclassing, admitting fewer students than a university can admit, or overclassing, admitting more students than a university can admit, their incoming first-year class. If the university underclasses, they lose the opportunity to tuition money the university could have gained and used to improve their facilities. A university overclassing, on the other hand, may lead to losing out on possible tuition money and a poorer quality of life for their students: an issue that many universities like [Northeastern](https://huntnewsnu.com/68925/editorial/op-ed-northeastern-needs-to-fix-the-current-housing-crisis/) and [schools in the University of California](https://www.latimes.com/california/story/2022-09-26/college-housing-shortage-pushes-students-into-crisis-as-most-uc-classes-start-up) system.
 
-Therefore, with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves in our analysis of the Olin College of Engineering and level up their expectations for their yield rates before going into the next recruitment season.
+Therefore, with those risks, every college, since it is essential to keep students happy while maximizing profit, should examine themselves. In this report, we will do an analysis of the Olin College of Engineering and identify what their expectations for their yield rates before going into the next recruitment season.
 
 In order to conduct our analysis, we explored three methods to predict yield rate: linear regression, autoregression, and moving average. Finally, we intended to explore each model's benefits and limitations to find the most accurate way to model yield rates.
 
@@ -463,6 +467,8 @@ Overall, Olin's yield rate (on average 61.09%) matches up to other colleges and 
 Olin proves to be as well regarded by the students who were accepted and enrolled as more commonly known prestigious schools. Admitted Olin students accept their offer about as much as those schools on average, although Olin is not a household name compared to the other listed schools. Nevertheless, students who apply to Olin are intrigued by its uniqueness, whether it is the hands-on project-based curriculum, its tight-knit community, or the enchantment sparked by Candidates' Weekend, amongst other factors, making up for its lack of notability.
 
 In addition, ARIMA modeling may not wholly be an accurate method of modeling yield rates at a college. Many factors are involved in yield that influences a student's decision to accept and reject particular college offers, such as financial status, other college offers, location, and opportunities, as well as how many applicants an admissions office looks to accept. Time and previous yield rates do not accurately capture all of these uncertainties. For example, we have seen volatility in college admissions in times of crisis, such as during the COVID-19 pandemic, which describes these uncertainties' effects on college admissions offices.
+
+If you would like to run the code for yourself, you can run and view the document for yourself in this [GitHub Repository](https://github.com/toluooshy/College-Admissions-Modeling).
 
 ## Resources
 
